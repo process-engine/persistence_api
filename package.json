@@ -1,0 +1,18 @@
+{
+  "name": "@process-engine/persistence_meta",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "meta exec \"npm run build\" --exclude runtime_layer_meta",
+    "postinstall": "minstall --no-hoist aurelia-* --trust-local-modules .",
+    "reinstall": "./reinstall.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "meta": "^2.2.6",
+    "meta-npm": "^1.2.3",
+    "minstall": "^3.3.0"
+  }
+}
