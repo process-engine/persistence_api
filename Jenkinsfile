@@ -63,7 +63,7 @@ pipeline {
     }
     stage('Build Contracts') {
       steps {
-        dir('persistence_layer.contracts') {
+        dir('persistence_api.contracts') {
           sh('node --version')
           sh('npm run build')
         }
@@ -71,7 +71,7 @@ pipeline {
     }
     stage('Lint Contracts') {
       steps {
-        dir('persistence_layer.contracts') {
+        dir('persistence_api.contracts') {
           sh('node --version')
           sh('npm run lint')
         }
@@ -86,7 +86,7 @@ pipeline {
           stages {
             stage('Build Sources') {
               steps {
-                dir('persistence_layer.use_cases') {
+                dir('persistence_api.use_cases') {
                   sh('node --version')
                   sh('npm run build')
                 }
@@ -94,7 +94,7 @@ pipeline {
             }
             stage('Lint sources') {
               steps {
-                dir('persistence_layer.use_cases') {
+                dir('persistence_api.use_cases') {
                   sh('node --version')
                   sh('npm run lint')
                 }
@@ -102,7 +102,7 @@ pipeline {
             }
             stage('Execute tests') {
               steps {
-                dir('persistence_layer.use_cases') {
+                dir('persistence_api.use_cases') {
                   sh('node --version')
                   sh('npm run test')
                 }
@@ -114,7 +114,7 @@ pipeline {
           stages {
             stage('Build Sources') {
               steps {
-                dir('persistence_layer.services') {
+                dir('persistence_api.services') {
                   sh('node --version')
                   sh('npm run build')
                 }
@@ -122,7 +122,7 @@ pipeline {
             }
             stage('Lint sources') {
               steps {
-                dir('persistence_layer.services') {
+                dir('persistence_api.services') {
                   sh('node --version')
                   sh('npm run lint')
                 }
@@ -130,7 +130,7 @@ pipeline {
             }
             stage('Execute tests') {
               steps {
-                dir('persistence_layer.services') {
+                dir('persistence_api.services') {
                   sh('node --version')
                   sh('npm run test')
                 }
@@ -142,7 +142,7 @@ pipeline {
           stages {
             stage('Build Sources') {
               steps {
-                dir('persistence_layer.repositories.sequelize') {
+                dir('persistence_api.repositories.sequelize') {
                   sh('node --version')
                   sh('npm run build')
                 }
@@ -150,7 +150,7 @@ pipeline {
             }
             stage('Lint sources') {
               steps {
-                dir('persistence_layer.repositories.sequelize') {
+                dir('persistence_api.repositories.sequelize') {
                   sh('node --version')
                   sh('npm run lint')
                 }
@@ -158,7 +158,7 @@ pipeline {
             }
             stage('Execute tests') {
               steps {
-                dir('persistence_layer.repositories.sequelize') {
+                dir('persistence_api.repositories.sequelize') {
                   sh('node --version')
                   sh('npm run test')
                 }
@@ -174,7 +174,7 @@ pipeline {
           stages {
             stage('Set package version') {
               steps {
-                dir('persistence_layer.contracts') {
+                dir('persistence_api.contracts') {
                   sh('node --version')
                   sh('node ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir');
                 }
@@ -182,7 +182,7 @@ pipeline {
             }
             stage('Publish to npm') {
               steps {
-                dir('persistence_layer.contracts') {
+                dir('persistence_api.contracts') {
                   nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
                     sh('node ./node_modules/.bin/ci_tools publish-npm-package --create-tag-from-branch-name')
                   }
@@ -198,7 +198,7 @@ pipeline {
                 }
               }
               steps {
-                dir('persistence_layer.contracts') {
+                dir('persistence_api.contracts') {
                   withCredentials([
                     usernamePassword(credentialsId: 'process-engine-ci_github-token', passwordVariable: 'GH_TOKEN', usernameVariable: 'GH_USER')
                   ]) {
@@ -214,7 +214,7 @@ pipeline {
           stages {
             stage('Set package version') {
               steps {
-                dir('persistence_layer.use_cases') {
+                dir('persistence_api.use_cases') {
                   sh('node --version')
                   sh('node ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir');
                 }
@@ -222,7 +222,7 @@ pipeline {
             }
             stage('Publish to npm') {
               steps {
-                dir('persistence_layer.use_cases') {
+                dir('persistence_api.use_cases') {
                   nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
                     sh('node ./node_modules/.bin/ci_tools publish-npm-package --create-tag-from-branch-name')
                   }
@@ -238,7 +238,7 @@ pipeline {
                 }
               }
               steps {
-                dir('persistence_layer.use_cases') {
+                dir('persistence_api.use_cases') {
                   withCredentials([
                     usernamePassword(credentialsId: 'process-engine-ci_github-token', passwordVariable: 'GH_TOKEN', usernameVariable: 'GH_USER')
                   ]) {
@@ -254,7 +254,7 @@ pipeline {
           stages {
             stage('Set package version') {
               steps {
-                dir('persistence_layer.services') {
+                dir('persistence_api.services') {
                   sh('node --version')
                   sh('node ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir');
                 }
@@ -262,7 +262,7 @@ pipeline {
             }
             stage('Publish to npm') {
               steps {
-                dir('persistence_layer.services') {
+                dir('persistence_api.services') {
                   nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
                     sh('node ./node_modules/.bin/ci_tools publish-npm-package --create-tag-from-branch-name')
                   }
@@ -278,7 +278,7 @@ pipeline {
                 }
               }
               steps {
-                dir('persistence_layer.services') {
+                dir('persistence_api.services') {
                   withCredentials([
                     usernamePassword(credentialsId: 'process-engine-ci_github-token', passwordVariable: 'GH_TOKEN', usernameVariable: 'GH_USER')
                   ]) {
@@ -294,7 +294,7 @@ pipeline {
           stages {
             stage('Set package version') {
               steps {
-                dir('persistence_layer.repositories.sequelize') {
+                dir('persistence_api.repositories.sequelize') {
                   sh('node --version')
                   sh('node ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir');
                 }
@@ -302,7 +302,7 @@ pipeline {
             }
             stage('Publish to npm') {
               steps {
-                dir('persistence_layer.repositories.sequelize') {
+                dir('persistence_api.repositories.sequelize') {
                   nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
                     sh('node ./node_modules/.bin/ci_tools publish-npm-package --create-tag-from-branch-name')
                   }
@@ -318,7 +318,7 @@ pipeline {
                 }
               }
               steps {
-                dir('persistence_layer.repositories.sequelize') {
+                dir('persistence_api.repositories.sequelize') {
                   withCredentials([
                     usernamePassword(credentialsId: 'process-engine-ci_github-token', passwordVariable: 'GH_TOKEN', usernameVariable: 'GH_USER')
                   ]) {
