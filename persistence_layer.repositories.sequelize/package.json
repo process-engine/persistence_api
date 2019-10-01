@@ -1,5 +1,5 @@
 {
-  "name": "@process-engine/persistence_api.repository.sequelize",
+  "name": "@process-engine/persistence_api.repositories.sequelize",
   "version": "0.0.1",
   "description": "Contains the sequelize-based repository implementation for the persistence API.",
   "main": "dist/commonjs/index.js",
@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/process-engine/persistence_api#readme",
   "dependencies": {
-    "@essential-projects/iam_contracts": "^3.4.1"
+    "@essential-projects/iam_contracts": "^3.4.1",
+    "@process-engine/persistence_api.contracts": "0.0.1"
   },
   "devDependencies": {
     "@essential-projects/eslint-config": "^1.0.0",

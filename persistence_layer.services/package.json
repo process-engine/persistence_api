@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/process-engine/persistence_api#readme",
   "dependencies": {
-    "@essential-projects/iam_contracts": "^3.4.1"
+    "@essential-projects/iam_contracts": "^3.4.1",
+    "@process-engine/persistence_api.contracts": "0.0.1"
   },
   "devDependencies": {
     "@essential-projects/eslint-config": "^1.0.0",
