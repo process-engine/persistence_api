@@ -1,10 +1,10 @@
 {
-  "name": "@process-engine/persistence_meta",
+  "name": "@process-engine/persistence_api_meta",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "meta exec \"npm run build\" --exclude runtime_layer_meta",
+    "build": "meta exec \"npm run build\" --exclude persistence_api",
     "postinstall": "minstall --no-hoist aurelia-* --trust-local-modules .",
     "reinstall": "./reinstall.sh"
   },
