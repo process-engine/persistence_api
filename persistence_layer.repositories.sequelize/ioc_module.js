@@ -1,9 +1,18 @@
 'use strict';
 
-const ProcessDefinitionRepository = require('./dist/commonjs/index').ProcessDefinitionRepository;
+const {
+  CorrelationRepository,
+  ProcessDefinitionRepository,
+} = require('./dist/commonjs/index');
 const disposableDiscoveryTag = require('@essential-projects/bootstrapper_contracts').disposableDiscoveryTag;
 
 function registerInContainer(container) {
+
+  container.register('CorrelationRepository', CorrelationRepository)
+    .dependencies('SequelizeConnectionManager')
+    .configure('process_engine:correlation_repository')
+    .tags(disposableDiscoveryTag)
+    .singleton();
 
   container.register('ProcessDefinitionRepository', ProcessDefinitionRepository)
     .dependencies('SequelizeConnectionManager')
