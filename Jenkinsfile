@@ -250,7 +250,7 @@ pipeline {
             }
           }
         }
-        stage('Publish GitHub Release') {
+        stage('Create GitHub Release') {
           when {
             anyOf {
               branch "beta"
@@ -258,12 +258,22 @@ pipeline {
               branch "master"
             }
           }
-          steps {
-            withCredentials([
-              usernamePassword(credentialsId: 'process-engine-ci_github-token', passwordVariable: 'GH_TOKEN', usernameVariable: 'GH_USER')
-            ]) {
-              sh('node ./node_modules/.bin/ci_tools commit-and-tag-version --only-on-primary-branches')
-              sh('node ./node_modules/.bin/ci_tools update-github-release --only-on-primary-branches --use-title-and-text-from-git-tag');
+          stages {
+            stage('Set global version') {
+              steps {
+                sh('node --version')
+                sh('node ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir');
+              }
+            }
+            stage('Publish Release') {
+              steps {
+                withCredentials([
+                  usernamePassword(credentialsId: 'process-engine-ci_github-token', passwordVariable: 'GH_TOKEN', usernameVariable: 'GH_USER')
+                ]) {
+                  sh('node ./node_modules/.bin/ci_tools commit-and-tag-version --only-on-primary-branches')
+                  sh('node ./node_modules/.bin/ci_tools update-github-release --only-on-primary-branches --use-title-and-text-from-git-tag');
+                }
+              }
             }
           }
         }
