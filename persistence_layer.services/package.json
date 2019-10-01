@@ -21,12 +21,17 @@
   },
   "homepage": "https://github.com/process-engine/persistence_api#readme",
   "dependencies": {
+    "@essential-projects/errors_ts": "^1.4.4",
     "@essential-projects/iam_contracts": "^3.4.1",
-    "@process-engine/persistence_api.contracts": "0.0.1"
+    "@process-engine/persistence_api.contracts": "0.0.1",
+    "bluebird-global": "^1.0.1",
+    "clone": "^2.1.2",
+    "loggerhythm": "^3.0.3"
   },
   "devDependencies": {
     "@essential-projects/eslint-config": "^1.0.0",
     "@process-engine/ci_tools": "^2.0.0",
+    "@types/bluebird-global": "^3.5.9",
     "@types/node": "^10.12.10",
     "eslint": "^5.16.0",
     "tsconfig": "^7.0.0",
