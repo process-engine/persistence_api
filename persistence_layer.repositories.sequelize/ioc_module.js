@@ -3,6 +3,7 @@
 const {
   CorrelationRepository,
   CronjobHistoryRepository,
+  ExternalTaskRepository,
   FlowNodeInstanceRepository,
   ProcessDefinitionRepository,
 } = require('./dist/commonjs/index');
@@ -19,6 +20,12 @@ function registerInContainer(container) {
   container.register('CronjobHistoryRepository', CronjobHistoryRepository)
     .dependencies('SequelizeConnectionManager')
     .configure('process_engine:cronjob_history_repository')
+    .tags(disposableDiscoveryTag)
+    .singleton();
+
+  container.register('ExternalTaskRepository', ExternalTaskRepository)
+    .dependencies('SequelizeConnectionManager')
+    .configure('process_engine:external_task_repository')
     .tags(disposableDiscoveryTag)
     .singleton();
 

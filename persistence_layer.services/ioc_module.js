@@ -3,6 +3,7 @@
 const {
   CorrelationService,
   CronjobHistoryService,
+  ExternalTaskService,
   FlowNodeInstanceService,
   ProcessModelService,
 } = require('./dist/commonjs/index');
@@ -16,6 +17,10 @@ function registerInContainer(container) {
   container
     .register('CronjobHistoryService', CronjobHistoryService)
     .dependencies('CronjobHistoryRepository', 'IamService');
+
+  container
+    .register('ExternalTaskService', ExternalTaskService)
+    .dependencies('ExternalTaskRepository', 'IamService');
 
   container
     .register('FlowNodeInstanceService', FlowNodeInstanceService)
