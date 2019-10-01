@@ -250,7 +250,7 @@ pipeline {
             }
           }
         }
-        stage('Create GitHub Release') {
+        stage('GitHub Release') {
           when {
             anyOf {
               branch "beta"
@@ -259,13 +259,13 @@ pipeline {
             }
           }
           stages {
-            stage('Set global version') {
+            stage('Set version for GitHub Release') {
               steps {
                 sh('node --version')
                 sh('node ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir');
               }
             }
-            stage('Publish Release') {
+            stage('Publish GitHub Release') {
               steps {
                 withCredentials([
                   usernamePassword(credentialsId: 'process-engine-ci_github-token', passwordVariable: 'GH_TOKEN', usernameVariable: 'GH_USER')
