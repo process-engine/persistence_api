@@ -4,8 +4,6 @@ import {ExternalTask} from '../data_models/index';
 
 /**
  * The repository used to store and retrieve ExternalTasks.
- *
- * NOTE: This will be moved to the RuntimeAPI contracts soon.
  */
 export interface IExternalTaskRepository {
 
