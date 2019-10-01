@@ -61,16 +61,32 @@ pipeline {
         }
       }
     }
+    stage('Build Contracts') {
+      steps {
+        dir('persistence_layer.contracts') {
+          sh('node --version')
+          sh('npm run build')
+        }
+      }
+    }
+    stage('Lint Contracts') {
+      steps {
+        dir('persistence_layer.contracts') {
+          sh('node --version')
+          sh('npm run lint')
+        }
+      }
+    }
     stage('Build layers') {
       when {
         expression {buildIsRequired == true}
       }
       parallel {
-        stage('Contracts') {
+        stage('UseCases') {
           stages {
             stage('Build Sources') {
               steps {
-                dir('persistence_layer.contracts') {
+                dir('persistence_layer.use_cases') {
                   sh('node --version')
                   sh('npm run build')
                 }
@@ -78,7 +94,7 @@ pipeline {
             }
             stage('Lint sources') {
               steps {
-                dir('persistence_layer.contracts') {
+                dir('persistence_layer.use_cases') {
                   sh('node --version')
                   sh('npm run lint')
                 }
@@ -86,12 +102,76 @@ pipeline {
             }
             stage('Execute tests') {
               steps {
-                dir('persistence_layer.contracts') {
+                dir('persistence_layer.use_cases') {
                   sh('node --version')
                   sh('npm run test')
                 }
               }
             }
+          }
+        }
+        stage('Services') {
+          stages {
+            stage('Build Sources') {
+              steps {
+                dir('persistence_layer.services') {
+                  sh('node --version')
+                  sh('npm run build')
+                }
+              }
+            }
+            stage('Lint sources') {
+              steps {
+                dir('persistence_layer.services') {
+                  sh('node --version')
+                  sh('npm run lint')
+                }
+              }
+            }
+            stage('Execute tests') {
+              steps {
+                dir('persistence_layer.services') {
+                  sh('node --version')
+                  sh('npm run test')
+                }
+              }
+            }
+          }
+        }
+        stage('Repositories') {
+          stages {
+            stage('Build Sources') {
+              steps {
+                dir('persistence_layer.repositories.sequelize') {
+                  sh('node --version')
+                  sh('npm run build')
+                }
+              }
+            }
+            stage('Lint sources') {
+              steps {
+                dir('persistence_layer.repositories.sequelize') {
+                  sh('node --version')
+                  sh('npm run lint')
+                }
+              }
+            }
+            stage('Execute tests') {
+              steps {
+                dir('persistence_layer.repositories.sequelize') {
+                  sh('node --version')
+                  sh('npm run test')
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('Publish packages') {
+      parallel {
+        stage('Contracts') {
+          stages {
             stage('Set package version') {
               steps {
                 dir('persistence_layer.contracts') {
@@ -132,30 +212,6 @@ pipeline {
         }
         stage('UseCases') {
           stages {
-            stage('Build Sources') {
-              steps {
-                dir('persistence_layer.use_cases') {
-                  sh('node --version')
-                  sh('npm run build')
-                }
-              }
-            }
-            stage('Lint sources') {
-              steps {
-                dir('persistence_layer.use_cases') {
-                  sh('node --version')
-                  sh('npm run lint')
-                }
-              }
-            }
-            stage('Execute tests') {
-              steps {
-                dir('persistence_layer.use_cases') {
-                  sh('node --version')
-                  sh('npm run test')
-                }
-              }
-            }
             stage('Set package version') {
               steps {
                 dir('persistence_layer.use_cases') {
@@ -196,30 +252,6 @@ pipeline {
         }
         stage('Services') {
           stages {
-            stage('Build Sources') {
-              steps {
-                dir('persistence_layer.services') {
-                  sh('node --version')
-                  sh('npm run build')
-                }
-              }
-            }
-            stage('Lint sources') {
-              steps {
-                dir('persistence_layer.services') {
-                  sh('node --version')
-                  sh('npm run lint')
-                }
-              }
-            }
-            stage('Execute tests') {
-              steps {
-                dir('persistence_layer.services') {
-                  sh('node --version')
-                  sh('npm run test')
-                }
-              }
-            }
             stage('Set package version') {
               steps {
                 dir('persistence_layer.services') {
@@ -260,30 +292,6 @@ pipeline {
         }
         stage('Repositories') {
           stages {
-            stage('Build Sources') {
-              steps {
-                dir('persistence_layer.repositories.sequelize') {
-                  sh('node --version')
-                  sh('npm run build')
-                }
-              }
-            }
-            stage('Lint sources') {
-              steps {
-                dir('persistence_layer.repositories.sequelize') {
-                  sh('node --version')
-                  sh('npm run lint')
-                }
-              }
-            }
-            stage('Execute tests') {
-              steps {
-                dir('persistence_layer.repositories.sequelize') {
-                  sh('node --version')
-                  sh('npm run test')
-                }
-              }
-            }
             stage('Set package version') {
               steps {
                 dir('persistence_layer.repositories.sequelize') {
