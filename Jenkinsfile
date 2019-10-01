@@ -184,7 +184,7 @@ pipeline {
               steps {
                 dir('persistence_api.contracts') {
                   nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
-                    sh('node ./node_modules/.bin/ci_tools publish-npm-package --create-tag-from-branch-name')
+                    sh('node ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name')
                   }
                 }
               }
@@ -205,7 +205,7 @@ pipeline {
               steps {
                 dir('persistence_api.use_cases') {
                   nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
-                    sh('node ./node_modules/.bin/ci_tools publish-npm-package --create-tag-from-branch-name')
+                    sh('node ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name')
                   }
                 }
               }
@@ -226,7 +226,7 @@ pipeline {
               steps {
                 dir('persistence_api.services') {
                   nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
-                    sh('node ./node_modules/.bin/ci_tools publish-npm-package --create-tag-from-branch-name')
+                    sh('node ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name')
                   }
                 }
               }
@@ -247,7 +247,7 @@ pipeline {
               steps {
                 dir('persistence_api.repositories.sequelize') {
                   nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
-                    sh('node ./node_modules/.bin/ci_tools publish-npm-package --create-tag-from-branch-name')
+                    sh('node ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name')
                   }
                 }
               }
