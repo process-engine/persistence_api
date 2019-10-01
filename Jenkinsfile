@@ -168,29 +168,49 @@ pipeline {
         }
       }
     }
-    stage('Publish') {
-      parallel {
-        stage('Contracts') {
-          stages {
-            stage('Set contracts package version') {
-              steps {
-                dir('persistence_api.contracts') {
-                  sh('node --version')
-                  sh('node ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir');
-                }
-              }
-            }
-            stage('Publish to npm') {
-              steps {
-                dir('persistence_api.contracts') {
-                  nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
-                    sh('node ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name')
-                  }
-                }
-              }
-            }
+    // TODO: Should be replaced by the Publish/Contracts stage, as soon as the ci_tools recognize the `--ignore-scripts` flag.
+    stage('Set contracts package version') {
+      steps {
+        dir('persistence_api.contracts') {
+          sh('node --version')
+          sh('node ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir');
+        }
+      }
+    }
+    stage('Publish contracts to npm') {
+      steps {
+        dir('persistence_api.contracts') {
+          nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
+            sh('node ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name')
           }
         }
+      }
+    }
+    stage('Publish') {
+      parallel {
+        // TODO: This doesn't work yet, because the ci_tools ignore the `--ignore-scripts` flag.
+        // This means that the pacakge have its sources build, before being published, which will cause the other publish operations to fail.
+        // stage('Contracts') {
+        //   stages {
+        //     stage('Set package version') {
+        //       steps {
+        //         dir('persistence_api.contracts') {
+        //           sh('node --version')
+        //           sh('node ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir');
+        //         }
+        //       }
+        //     }
+        //     stage('Publish to npm') {
+        //       steps {
+        //         dir('persistence_api.contracts') {
+        //           nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
+        //             sh('node ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name')
+        //           }
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
         stage('UseCases') {
           stages {
             stage('Set package version') {
