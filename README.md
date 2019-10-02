@@ -13,7 +13,7 @@ The goal of this package is to reduce the effort required for maintaining the Pr
 
 It combines what was previously known as the "Persistence Layer APIs" into a single API, located in a single GitHub repository.
 
-Those packages include:
+The functions from the following packages are included:
 
 - [correlation.contracts](https://github.com/process-engine/correlation.contracts)
 - [correlation.service](https://github.com/process-engine/correlation.service)
