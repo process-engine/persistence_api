@@ -25,7 +25,7 @@
     "@essential-projects/errors_ts": "^1.4.0",
     "@essential-projects/iam_contracts": "^3.4.1",
     "@essential-projects/sequelize_connection_manager": "^3.0.0",
-    "@process-engine/persistence_api.contracts": "1.0.0",
+    "@process-engine/persistence_api.contracts": "feature~add_call_activity_paylad_and_start_event_id",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.2",
     "bluebird-global": "^1.0.1",

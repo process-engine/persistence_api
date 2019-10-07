@@ -23,7 +23,7 @@
   "dependencies": {
     "@essential-projects/errors_ts": "^1.4.4",
     "@essential-projects/iam_contracts": "^3.4.1",
-    "@process-engine/persistence_api.contracts": "1.0.0",
+    "@process-engine/persistence_api.contracts": "feature~add_call_activity_paylad_and_start_event_id",
     "bluebird-global": "^1.0.1",
     "clone": "^2.1.2",
     "loggerhythm": "^3.0.3"
