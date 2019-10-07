@@ -1,11 +1,13 @@
 import {BaseElement} from '../base/index';
 
 /**
- * Describes a BPMN error that can be thrown by an ErrorEndEvent.
+ * Describes a global BPMN error element.
+ * Can be thrown by an ErrorEndEvent and caught by an ErrorBoundaryEvent.
  */
 export class Error extends BaseElement {
 
-  public name: string;
-  public code: string;
+  public name?: string;
+  public code?: string;
+  public message?: string;
 
 }
