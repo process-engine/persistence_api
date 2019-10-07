@@ -1,4 +1,4 @@
-import {ExtensionElements} from './types/extension_elements';
+import {ExtensionElements} from './extension_elements';
 
 /**
  * The base class for all BPMN elements, including processes, participants, etc.

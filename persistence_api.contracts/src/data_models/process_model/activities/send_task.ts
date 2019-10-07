@@ -1,5 +1,5 @@
 import {BpmnType} from '../constants';
-import {MessageEventDefinition} from '../events/definitions';
+import {MessageEventDefinition} from '../events/index';
 import {Activity} from './activity';
 
 /**
