@@ -18,6 +18,16 @@ export class CallActivity extends Activity {
 
   public type: CallActivityType = CallActivityType.Unspecified;
   public calledReference?: string;
+  /**
+   * Optional: The ID of the StartEvent with which to call the CallActivity.
+   * If no ID is provided, the first found StartEventID is used.
+   */
+  public startEventId?: string;
+  /**
+   * Optional: The payload with which to start the CallActivity.
+   * If not provided, the current token is used as a payload.
+   */
+  public payload?: any; // eslint-disable-line
   public bindingType: CallActivityBindingType = CallActivityBindingType.deployment;
   public calledElementVersion?: string;
   public calledElementTenantId: string;
