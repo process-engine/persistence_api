@@ -7,5 +7,6 @@ export class ErrorEventDefinition extends EventDefinition {
 
   public name: string;
   public code: string;
+  public message: string;
 
 }
