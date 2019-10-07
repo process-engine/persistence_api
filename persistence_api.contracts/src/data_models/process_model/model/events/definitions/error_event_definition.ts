@@ -5,7 +5,8 @@ import {EventDefinition} from './event_definition';
  */
 export class ErrorEventDefinition extends EventDefinition {
 
-  public name: string;
-  public code: string;
+  public name?: string;
+  public code?: string;
+  public message?: string;
 
 }
