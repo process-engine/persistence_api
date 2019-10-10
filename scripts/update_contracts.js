@@ -123,12 +123,12 @@ async function createCommit() {
   console.log('Commiting everything');
 
   try {
-    // await exec('git add */package.json');
-    // await exec('git commit -m ":recycle: Set feature branch version for persistence_api.contracts"');
+    await exec('git add */package.json');
+    await exec('git commit -m ":recycle: Update versions for persistence_api.contracts"');
 
-    // if (pushImmediately) {
-    //   await exec('git push');
-    // }
+    if (pushImmediately) {
+      await exec('git push');
+    }
   } catch (error) {
     console.log('Failed to create commit. This likely means that the versions are already set and that there is nothing to commit.');
   }
