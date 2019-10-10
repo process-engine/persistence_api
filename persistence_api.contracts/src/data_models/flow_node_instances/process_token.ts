@@ -12,6 +12,7 @@ export class ProcessToken {
   public processModelId: string;
   public correlationId: string;
   public flowNodeInstanceId: string;
+  public currentLane?: string; // Optional, to avoid a breaking change in ProcessEngineCore and ProcessEngineContracts
   public identity: IIdentity;
   public createdAt: Date;
 
