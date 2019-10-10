@@ -481,6 +481,8 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
     const createParams = {
       flowNodeInstanceId: flowNodeInstanceId,
       flowNodeId: flowNode.id,
+      flowNodeName: flowNode.name,
+      flowNodeLane: processToken.currentLane,
       flowNodeType: flowNode.bpmnType,
       eventType: (flowNode as any).eventType,
       correlationId: processToken.correlationId,
