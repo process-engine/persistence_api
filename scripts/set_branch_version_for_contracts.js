@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Note that this script will not work on Jenkins, because Jenkins Builds always checkout a commit, not a branch.
+// Also note that this will only work properly on feature branches.
 const pushImmediately = process.argv.length > 2 && process.argv[2] === 'pushImmediately';
 console.log(`Command args: ${process.argv.join('\n')}`);
 
