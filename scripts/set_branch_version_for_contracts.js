@@ -2,14 +2,13 @@ const exec = require('./exec_async').execAsync;
 const fs = require('fs');
 const path = require('path');
 
+// Note that this script will not work on Jenkins, because Jenkins Builds always checkout a commit, not a branch.
 const pushImmediately = process.argv.length > 2 && process.argv[2] === 'pushImmediately';
-console.log(`Pushing changes immediately: ${pushImmediately}`);
+console.log(`Command args: ${process.argv.join('\n')}`);
 
 async function setBranchVersionForContracts() {
 
-  const getCurrentBranchCommand = `git branch | grep \\* | cut -d ' ' -f2`;
-
-  const currentBranch = await exec(getCurrentBranchCommand);
+  const currentBranch = await exec(`git branch | grep \\* | cut -d ' ' -f2`);
 
   const sanitizedBranchVersion = currentBranch
     .replace('/', '~')
