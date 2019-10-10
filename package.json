@@ -6,7 +6,8 @@
   "scripts": {
     "build": "meta exec \"npm run build\" --exclude persistence_api",
     "postinstall": "minstall --no-hoist aurelia-* --trust-local-modules .",
-    "reinstall": "./reinstall.sh"
+    "reinstall": "./reinstall.sh",
+    "setCurrentBranchVersionForContracts": "node scripts/set_branch_version_for_contracts.js"
   },
   "author": "",
   "license": "ISC",
