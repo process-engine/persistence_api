@@ -10,8 +10,26 @@ import {ProcessTokenType} from './process_token_type';
  */
 export class FlowNodeInstance {
 
+  /**
+   * The instance ID of this FlowNodeInstance.
+   */
   public id: string;
+  /**
+   * The unique ID of the FlowNode, as it is modelled in the diagram.
+   */
   public flowNodeId: string;
+  /**
+   * The name of the FlowNode, as it is modelled in the diagram.
+   */
+  public flowNodeName: string;
+  /**
+   * The lane that this FlowNodeInstance belongs to.
+   * Also known as the claim the user needs to have, in order to be allowed
+   * to access this FlowNodeInstance.
+   * Particularly relevant for ManualTasks, UserTasks and EmptyActivities,
+   * which require manual continuation.
+   */
+  public flowNodeLane: string;
   /**
    * Describes the type of FlowNode that this instance is executing.
    * Can be UserTask, ServiceTask, ScriptTask, etc.
