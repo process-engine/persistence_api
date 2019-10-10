@@ -68,7 +68,7 @@ async function getVersionFromCurrentBranch() {
     process.exit(1);
   }
 
-  console.log(`Setting branch version ${sanitizedBranchVersion} for all layer packages`);
+  console.log(`Feature branch tag will be: ${sanitizedBranchVersion}`);
 
   return sanitizedBranchVersion;
 }
