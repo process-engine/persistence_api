@@ -1,5 +1,5 @@
 import {
-  AllowNull, Column, CreatedAt, DataType, Default, HasMany, Model, Table, Unique, UpdatedAt,
+  AllowNull, Column, CreatedAt, DataType, HasMany, Model, Table, Unique, UpdatedAt,
 } from 'sequelize-typescript';
 
 import {FlowNodeInstanceState} from '@process-engine/persistence_api.contracts';
@@ -20,12 +20,10 @@ export class FlowNodeInstanceModel extends Model<FlowNodeInstanceModel> {
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  @Default('')
   public flowNodeName: string;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  @Default('')
   public flowNodeLane: string;
 
   @AllowNull(true)
