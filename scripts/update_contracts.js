@@ -104,7 +104,7 @@ async function setContractsVersionInLayerPackages(versionToUse) {
 
 function setPersistenceApiContractsBranchVersionForPackage(packageName, versionToSet) {
 
-  console.log(`Setting @process-engine/persistence_api_contracts for pacakge ${packageName}`)
+  console.log(`Setting @process-engine/persistence_api_contracts for package ${packageName}`)
 
   const pathToPackageJson = path.resolve(packageName, 'package.json');
 
