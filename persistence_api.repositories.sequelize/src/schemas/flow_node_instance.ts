@@ -20,6 +20,14 @@ export class FlowNodeInstanceModel extends Model<FlowNodeInstanceModel> {
 
   @AllowNull(true)
   @Column(DataType.STRING)
+  public flowNodeName: string;
+
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  public flowNodeLane: string;
+
+  @AllowNull(true)
+  @Column(DataType.STRING)
   public flowNodeType: string;
 
   @AllowNull(true)

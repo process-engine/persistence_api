@@ -62,6 +62,9 @@ pipeline {
       }
     }
     stage('Build Contracts') {
+      when {
+        expression {buildIsRequired == true}
+      }
       steps {
         dir('persistence_api.contracts') {
           sh('node --version')
@@ -70,6 +73,9 @@ pipeline {
       }
     }
     stage('Lint Contracts') {
+      when {
+        expression {buildIsRequired == true}
+      }
       steps {
         dir('persistence_api.contracts') {
           sh('node --version')
@@ -169,6 +175,9 @@ pipeline {
       }
     }
     stage('Set contracts package version') {
+      when {
+        expression {buildIsRequired == true}
+      }
       steps {
         dir('persistence_api.contracts') {
           sh('node --version')
@@ -177,6 +186,9 @@ pipeline {
       }
     }
     stage('Publish contracts to npm') {
+      when {
+        expression {buildIsRequired == true}
+      }
       steps {
         dir('persistence_api.contracts') {
           nodejs(configId: env.NPM_RC_FILE, nodeJSInstallationName: env.NODE_JS_VERSION) {
@@ -186,6 +198,9 @@ pipeline {
       }
     }
     stage('Publish') {
+      when {
+        expression {buildIsRequired == true}
+      }
       parallel {
         stage('UseCases') {
           stages {

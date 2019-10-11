@@ -1,6 +1,6 @@
 {
   "name": "@process-engine/persistence_api.repositories.sequelize",
-  "version": "1.1.0-alpha.2",
+  "version": "1.1.0-alpha.3",
   "description": "Contains the sequelize-based repository implementation for the persistence API.",
   "main": "dist/commonjs/index.js",
   "typings": "dist/index.d.ts",
@@ -25,7 +25,7 @@
     "@essential-projects/errors_ts": "^1.4.0",
     "@essential-projects/iam_contracts": "^3.4.1",
     "@essential-projects/sequelize_connection_manager": "^3.0.0",
-    "@process-engine/persistence_api.contracts": "1.1.0-alpha.2",
+    "@process-engine/persistence_api.contracts": "1.1.0-alpha.3",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.2",
     "bluebird-global": "^1.0.1",

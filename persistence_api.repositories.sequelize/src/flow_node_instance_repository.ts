@@ -481,6 +481,8 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
     const createParams = {
       flowNodeInstanceId: flowNodeInstanceId,
       flowNodeId: flowNode.id,
+      flowNodeName: flowNode.name,
+      flowNodeLane: processToken.currentLane,
       flowNodeType: flowNode.bpmnType,
       eventType: (flowNode as any).eventType,
       correlationId: processToken.correlationId,
@@ -669,6 +671,8 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
     const runtimeFlowNodeInstance = new FlowNodeInstance();
     runtimeFlowNodeInstance.id = dataModel.flowNodeInstanceId;
     runtimeFlowNodeInstance.flowNodeId = dataModel.flowNodeId;
+    runtimeFlowNodeInstance.flowNodeName = dataModel.flowNodeName;
+    runtimeFlowNodeInstance.flowNodeLane = dataModel.flowNodeLane;
     runtimeFlowNodeInstance.flowNodeType = <BpmnType> dataModel.flowNodeType;
     runtimeFlowNodeInstance.eventType = <EventType> dataModel.eventType;
     runtimeFlowNodeInstance.correlationId = dataModel.correlationId;

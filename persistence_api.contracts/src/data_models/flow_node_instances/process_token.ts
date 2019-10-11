@@ -12,6 +12,7 @@ export class ProcessToken {
   public processModelId: string;
   public correlationId: string;
   public flowNodeInstanceId: string;
+  public currentLane?: string; // Optional, because ProcessModels are not required to have lanes.
   public identity: IIdentity;
   public createdAt: Date;
 
