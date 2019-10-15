@@ -2,7 +2,7 @@ import {Logger} from 'loggerhythm';
 
 import {IIAMService, IIdentity} from '@essential-projects/iam_contracts';
 
-import {ForbiddenError, NotFoundError} from '@essential-projects/errors_ts';
+import {NotFoundError} from '@essential-projects/errors_ts';
 
 import {
   Correlation,
@@ -92,11 +92,6 @@ export class CorrelationService implements ICorrelationService {
 
     const correlationsFromRepo = await this.correlationRepository.getByProcessModelId(processModelId);
 
-    const noCorrelationsFound = !correlationsFromRepo || correlationsFromRepo.length === 0;
-    if (noCorrelationsFound) {
-      throw new NotFoundError(`No correlations for ProcessModel with ID "${processModelId}" found.`);
-    }
-
     const filteredCorrelationsFromRepo = await this.filterProcessInstancesFromRepoByIdentity(identity, correlationsFromRepo);
 
     const correlations = await this.mapCorrelationList(filteredCorrelationsFromRepo);
@@ -113,19 +108,13 @@ export class CorrelationService implements ICorrelationService {
     // These will already be ordered by their createdAt value, with the oldest one at the top.
     const correlationsFromRepo = await this.correlationRepository.getByCorrelationId(correlationId);
 
-    const noCorrelationsFound = !correlationsFromRepo || correlationsFromRepo.length === 0;
-    if (noCorrelationsFound) {
-      throw new NotFoundError(`Correlation with id "${correlationId}" not found.`);
-    }
-
     const filteredCorrelationsFromRepo = await this.filterProcessInstancesFromRepoByIdentity(identity, correlationsFromRepo);
 
-    // All correlations will have the same ID here, so we can just use the top entry as a base.
-    const noFilteredCorrelationsFromRepo = filteredCorrelationsFromRepo.length === 0;
-    if (noFilteredCorrelationsFromRepo) {
+    if (filteredCorrelationsFromRepo.length === 0) {
       throw new NotFoundError('No such correlations for the user.');
     }
 
+    // All correlations will have the same ID here, so we can just use the top entry as a base.
     const correlation = await this.mapCorrelation(correlationsFromRepo[0].correlationId, correlationsFromRepo);
 
     return correlation;
@@ -140,7 +129,9 @@ export class CorrelationService implements ICorrelationService {
       const userIsSuperAdmin = await this.checkIfUserIsSuperAdmin(identity);
 
       if (!userIsSuperAdmin) {
-        throw new ForbiddenError('Access denied');
+        // Throw 404 instaeads of 403, to prevent possible leak of sensitive data.
+        // 403 kinda says "there is something there, you just can't see it", whereas 404 suggests "there is nothing there".
+        throw new NotFoundError(`ProcessInstance with id ${processInstanceId} not found.`);
       }
     }
 
@@ -155,10 +146,6 @@ export class CorrelationService implements ICorrelationService {
     const processInstancesFromRepo = await this.correlationRepository.getSubprocessesForProcessInstance(processInstanceId);
 
     const filteredProcessInstancesFromRepo = await this.filterProcessInstancesFromRepoByIdentity(identity, processInstancesFromRepo);
-
-    if (filteredProcessInstancesFromRepo.length === 0) {
-      return undefined;
-    }
 
     const processInstances =
       await Promise.map<ProcessInstanceFromRepository, ProcessInstance>(filteredProcessInstancesFromRepo, this.mapProcessInstance.bind(this));
@@ -183,12 +170,10 @@ export class CorrelationService implements ICorrelationService {
 
     const filteredProcessInstancesFromRepo = await this.filterProcessInstancesFromRepoByIdentity(identity, processInstancesFromRepo);
 
-    if (filteredProcessInstancesFromRepo.length === 0) {
-      return undefined;
-    }
+    const processInstanceSubset = this.applyPagination(filteredProcessInstancesFromRepo, offset, limit);
 
     const processInstances =
-      await Promise.map<ProcessInstanceFromRepository, ProcessInstance>(filteredProcessInstancesFromRepo, this.mapProcessInstance.bind(this));
+      await Promise.map<ProcessInstanceFromRepository, ProcessInstance>(processInstanceSubset, this.mapProcessInstance.bind(this));
 
     return processInstances;
   }
@@ -210,12 +195,10 @@ export class CorrelationService implements ICorrelationService {
 
     const filteredProcessInstancesFromRepo = await this.filterProcessInstancesFromRepoByIdentity(identity, processInstancesFromRepo);
 
-    if (filteredProcessInstancesFromRepo.length === 0) {
-      return undefined;
-    }
+    const processInstanceSubset = this.applyPagination(filteredProcessInstancesFromRepo, offset, limit);
 
     const processInstances =
-      await Promise.map<ProcessInstanceFromRepository, ProcessInstance>(filteredProcessInstancesFromRepo, this.mapProcessInstance.bind(this));
+      await Promise.map<ProcessInstanceFromRepository, ProcessInstance>(processInstanceSubset, this.mapProcessInstance.bind(this));
 
     return processInstances;
   }
@@ -230,19 +213,12 @@ export class CorrelationService implements ICorrelationService {
 
     const processInstancesFromRepo = await this.correlationRepository.getCorrelationsByState(state);
 
-    const noProcessInstancesFound = !processInstancesFromRepo || processInstancesFromRepo.length === 0;
-    if (noProcessInstancesFound) {
-      throw new NotFoundError(`No ProcessInstances in a "${state}" state found.`);
-    }
-
     const filteredProcessInstancesFromRepo = await this.filterProcessInstancesFromRepoByIdentity(identity, processInstancesFromRepo);
 
-    if (filteredProcessInstancesFromRepo.length === 0) {
-      return undefined;
-    }
+    const processInstanceSubset = this.applyPagination(filteredProcessInstancesFromRepo, offset, limit);
 
     const processInstances =
-      await Promise.map<ProcessInstanceFromRepository, ProcessInstance>(filteredProcessInstancesFromRepo, this.mapProcessInstance.bind(this));
+      await Promise.map<ProcessInstanceFromRepository, ProcessInstance>(processInstanceSubset, this.mapProcessInstance.bind(this));
 
     return processInstances;
   }
@@ -332,12 +308,10 @@ export class CorrelationService implements ICorrelationService {
     const correlation = new Correlation();
     correlation.id = correlationId;
     correlation.createdAt = processInstancesFromRepo[0].createdAt;
+    correlation.processInstances = [];
 
     if (processInstancesFromRepo) {
-      correlation.processInstances = [];
-
       for (const processInstanceFromRepo of processInstancesFromRepo) {
-
         /**
          * As long as there is at least one running ProcessInstance within a correlation,
          * the correlation will always have a running state, no matter how many
@@ -386,12 +360,8 @@ export class CorrelationService implements ICorrelationService {
     return processInstance;
   }
 
-  private applyPagination(correlations: Array<Correlation>, offset: number, limit: number): Array<Correlation> {
+  private applyPagination(correlations: Array<any>, offset: number, limit: number): Array<any> {
 
-    // NOTE:
-    // The Correlation Data type will be changed in the near future.
-    // TL;DR: It will be flattened, so that the ProcessInstances are no longer moved into a subarray.
-    // This will change the way that "offset" works entirely.
     if (offset > correlations.length) {
       logger.warn(`Attempting an offset of ${offset} on a correlation list with ${correlations.length} entries. Returning an empty result set.`);
       return [];

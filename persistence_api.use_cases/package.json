@@ -23,7 +23,7 @@
   "dependencies": {
     "@essential-projects/iam_contracts": "^3.4.1",
     "@essential-projects/errors_ts": "^1.4.3",
-    "@process-engine/persistence_api.contracts": "1.1.0-alpha.3"
+    "@process-engine/persistence_api.contracts": "feature~unify_return_values_for_correlation_queries"
   },
   "devDependencies": {
     "@essential-projects/eslint-config": "^1.0.0",
