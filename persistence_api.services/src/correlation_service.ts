@@ -248,7 +248,7 @@ export class CorrelationService implements ICorrelationService {
     correlationsFromRepo: Array<ProcessInstanceFromRepository>,
   ): Promise<Array<ProcessInstanceFromRepository>> {
 
-    const userIsSuperAdmin = identity.userId !== 'dummy_token' && await this.checkIfUserIsSuperAdmin(identity);
+    const userIsSuperAdmin = await this.checkIfUserIsSuperAdmin(identity);
 
     // Super Admins can always see everything.
     if (userIsSuperAdmin) {
@@ -259,9 +259,10 @@ export class CorrelationService implements ICorrelationService {
 
       // Correlations that were created with the dummy token are visible to everybody.
       const isDummyToken = correlationFromRepo.identity.userId === 'dummy_token';
+      const isInternalToken = correlationFromRepo.identity.userId === 'ProcessEngineInternalUser';
       const userIdsMatch = identity.userId === correlationFromRepo.identity.userId;
 
-      return isDummyToken || userIdsMatch;
+      return isDummyToken || isInternalToken || userIdsMatch;
     });
   }
 
