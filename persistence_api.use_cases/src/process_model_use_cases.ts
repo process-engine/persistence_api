@@ -1,5 +1,7 @@
 import {IIAMService, IIdentity} from '@essential-projects/iam_contracts';
 
+import {ILoggingApi} from '@process-engine/logging_api_contracts';
+import {IMetricsApi} from '@process-engine/metrics_api_contracts';
 import {
   ICorrelationService,
   IExternalTaskService,
@@ -19,6 +21,8 @@ export class ProcessModelUseCases implements IProcessModelUseCases {
   private readonly externalTaskService: IExternalTaskService;
   private readonly flowNodeInstanceService: IFlowNodeInstanceService;
   private readonly iamService: IIAMService;
+  private readonly loggingService: ILoggingApi;
+  private readonly metricsService: IMetricsApi;
   private readonly processModelService: IProcessModelService;
 
   constructor(
@@ -26,12 +30,16 @@ export class ProcessModelUseCases implements IProcessModelUseCases {
     externalTaskService: IExternalTaskService,
     flowNodeInstanceService: IFlowNodeInstanceService,
     iamService: IIAMService,
+    loggingService: ILoggingApi,
+    metricsService: IMetricsApi,
     processModelService: IProcessModelService,
   ) {
     this.correlationService = correlationService;
     this.externalTaskService = externalTaskService;
     this.flowNodeInstanceService = flowNodeInstanceService;
     this.iamService = iamService;
+    this.loggingService = loggingService;
+    this.metricsService = metricsService;
     this.processModelService = processModelService;
   }
 
@@ -55,6 +63,7 @@ export class ProcessModelUseCases implements IProcessModelUseCases {
     await this.correlationService.deleteCorrelationByProcessModelId(identity, processModelId);
     await this.flowNodeInstanceService.deleteByProcessModelId(processModelId);
     await this.externalTaskService.deleteExternalTasksByProcessModelId(identity, processModelId);
+    await this.loggingService.archiveProcessModelLogs(identity, processModelId);
   }
 
   public async persistProcessDefinitions(identity: IIdentity, name: string, xml: string, overwriteExisting?: boolean): Promise<void> {
