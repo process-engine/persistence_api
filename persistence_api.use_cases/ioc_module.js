@@ -5,7 +5,16 @@ const {ProcessModelUseCases} = require('./dist/commonjs/index');
 function registerInContainer(container) {
   container
     .register('ProcessModelUseCases', ProcessModelUseCases)
-    .dependencies('CorrelationService', 'ExternalTaskService', 'FlowNodeInstanceService', 'IamService', 'ProcessModelService');
+    .dependencies(
+      'CorrelationService',
+      'ExternalTaskService',
+      'FlowNodeInstanceService',
+      'IamService',
+      'LoggingApiService',
+      'MetricsApiService',
+      'ProcessModelService',
+    )
+    .singleton();
 }
 
 module.exports.registerInContainer = registerInContainer;
