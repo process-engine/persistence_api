@@ -64,6 +64,7 @@ export class ProcessModelUseCases implements IProcessModelUseCases {
     await this.flowNodeInstanceService.deleteByProcessModelId(processModelId);
     await this.externalTaskService.deleteExternalTasksByProcessModelId(identity, processModelId);
     await this.loggingService.archiveProcessModelLogs(identity, processModelId);
+    await this.metricsService.archiveProcessModelMetrics(identity, processModelId);
   }
 
   public async persistProcessDefinitions(identity: IIdentity, name: string, xml: string, overwriteExisting?: boolean): Promise<void> {
