@@ -23,11 +23,13 @@
   "dependencies": {
     "@essential-projects/iam_contracts": "^3.4.1",
     "@essential-projects/errors_ts": "^1.4.3",
+    "@process-engine/logging_api_contracts": "feature~implement_log_archival",
+    "@process-engine/metrics_api_contracts": "feature~implement_log_archival",
     "@process-engine/persistence_api.contracts": "1.1.0-alpha.5"
   },
   "devDependencies": {
     "@essential-projects/eslint-config": "^1.0.0",
-    "@process-engine/ci_tools": "^2.0.0",
+    "@process-engine/ci_tools": "2.2.0-beta.3",
     "@types/node": "^10.12.10",
     "eslint": "^5.16.0",
     "tsconfig": "^7.0.0",
