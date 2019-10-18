@@ -11,7 +11,6 @@ function registerInContainer(container) {
       'FlowNodeInstanceService',
       'IamService',
       'LoggingApiService',
-      'MetricsApiService',
       'ProcessModelService',
     )
     .singleton();
