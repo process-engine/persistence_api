@@ -39,7 +39,7 @@
     "@process-engine/ci_tools": "^2.2.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/bluebird-global": "^3.5.12",
-    "@types/node": "^10.12.10",
+    "@types/node": "^12.11.7",
     "@types/validator": "^10.11.0",
     "eslint": "^5.16.0",
     "tsconfig": "^7.0.0",
