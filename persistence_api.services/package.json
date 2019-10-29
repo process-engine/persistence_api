@@ -33,6 +33,7 @@
     "@process-engine/ci_tools": "^2.2.0",
     "@types/bluebird-global": "^3.5.9",
     "@types/node": "^12.11.7",
+    "eslint": "^6.6.0",
     "typescript": "^3.6.4"
   },
   "scripts": {
