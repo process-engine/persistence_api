@@ -24,10 +24,10 @@ import {
 
 const logger: Logger = new Logger('processengine:persistence:flow_node_instance_repository');
 
-type Pagination = {
+interface IPagination {
   limit?: number;
   offset?: number;
-};
+}
 
 export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, IDisposable {
 
@@ -739,8 +739,8 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
     }
   }
 
-  private buildPagination(offset: number, limit: number): Pagination {
-    const pagination: Pagination = {};
+  private buildPagination(offset: number, limit: number): IPagination {
+    const pagination: IPagination = {};
 
     if (offset > 0) {
       pagination.offset = offset;

@@ -14,10 +14,10 @@ import {CorrelationModel} from './schemas';
 
 const logger = new Logger('processengine:persistence:correlation_repository');
 
-type Pagination = {
+interface IPagination {
   limit?: number;
   offset?: number;
-};
+}
 
 export class CorrelationRepository implements ICorrelationRepository, IDisposable {
 
@@ -296,8 +296,8 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     }
   }
 
-  private buildPagination(offset: number, limit: number): Pagination {
-    const pagination: Pagination = {};
+  private buildPagination(offset: number, limit: number): IPagination {
+    const pagination: IPagination = {};
 
     if (offset > 0) {
       pagination.offset = offset;

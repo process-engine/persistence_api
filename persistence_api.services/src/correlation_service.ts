@@ -21,9 +21,9 @@ const logger = Logger.createLogger('processengine:correlation:service');
  *
  * Only use internally.
  */
-type GroupedCorrelations = {
+interface IGroupedCorrelations {
   [correlationId: string]: Array<ProcessInstanceFromRepository>;
-};
+}
 
 const superAdminClaim = 'can_manage_process_instances';
 const canReadProcessModelClaim = 'can_read_process_model';
@@ -283,9 +283,9 @@ export class CorrelationService implements ICorrelationService {
     return mappedCorrelations;
   }
 
-  private groupCorrelations(correlations: Array<ProcessInstanceFromRepository>): GroupedCorrelations {
+  private groupCorrelations(correlations: Array<ProcessInstanceFromRepository>): IGroupedCorrelations {
 
-    const groupedCorrelations: GroupedCorrelations = {};
+    const groupedCorrelations: IGroupedCorrelations = {};
 
     for (const correlation of correlations) {
 

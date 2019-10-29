@@ -12,10 +12,10 @@ import {CronjobHistoryEntryModel} from './schemas';
 
 const logger = new Logger('processengine:persistence:cronjob_history_repository');
 
-type Pagination = {
+interface IPagination {
   limit?: number;
   offset?: number;
-};
+}
 
 export class CronjobHistoryRepository implements ICronjobHistoryRepository, IDisposable {
 
@@ -118,8 +118,8 @@ export class CronjobHistoryRepository implements ICronjobHistoryRepository, IDis
     return cronjob;
   }
 
-  private buildPagination(offset: number, limit: number): Pagination {
-    const pagination: Pagination = {};
+  private buildPagination(offset: number, limit: number): IPagination {
+    const pagination: IPagination = {};
 
     if (offset > 0) {
       pagination.offset = offset;
