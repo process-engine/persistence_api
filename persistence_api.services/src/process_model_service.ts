@@ -142,8 +142,8 @@ export class ProcessModelService implements IProcessModelService {
       throw parsingError;
     }
 
-    const processDefinitionHasMoreThanOneProcessModel = parsedProcessDefinition.processes.length > 1;
-    if (processDefinitionHasMoreThanOneProcessModel) {
+    if (parsedProcessDefinition.processes.length > 1) {
+
       const tooManyProcessModelsError = `The XML for process "${name}" contains more than one ProcessModel. This is currently not supported.`;
       logger.error(tooManyProcessModelsError);
 
@@ -152,12 +152,38 @@ export class ProcessModelService implements IProcessModelService {
 
     const processsModel = parsedProcessDefinition.processes[0];
 
-    const processModelIdIsNotEqualToDefinitionName = processsModel.id !== name;
-    if (processModelIdIsNotEqualToDefinitionName) {
+    if (processsModel.id !== name) {
+
       const namesDoNotMatchError = `The ProcessModel contained within the diagram "${name}" must also use the name "${name}"!`;
       logger.error(namesDoNotMatchError);
 
       throw new UnprocessableEntityError(namesDoNotMatchError);
+    }
+
+    if (processsModel.id !== name) {
+
+      const namesDoNotMatchError = `The ProcessModel contained within the diagram "${name}" must also use the name "${name}"!`;
+      logger.error(namesDoNotMatchError);
+
+      throw new UnprocessableEntityError(namesDoNotMatchError);
+    }
+
+    const processModelHasNoStartEvents = !processsModel.flowNodes.some((flowNode): boolean => flowNode.bpmnType === BpmnType.startEvent);
+    if (processModelHasNoStartEvents) {
+
+      const noStartEventsError = `The ProcessModel contained within the diagram "${name}" has no StartEvents!`;
+      logger.error(noStartEventsError);
+
+      throw new UnprocessableEntityError(noStartEventsError);
+    }
+
+    const processModelHasNoEndEvents = !processsModel.flowNodes.some((flowNode): boolean => flowNode.bpmnType === BpmnType.endEvent);
+    if (processModelHasNoEndEvents) {
+
+      const noEndEventsError = `The ProcessModel contained within the diagram "${name}" has no EndEvents!`;
+      logger.error(noEndEventsError);
+
+      throw new UnprocessableEntityError(noEndEventsError);
     }
   }
 
@@ -217,11 +243,15 @@ export class ProcessModelService implements IProcessModelService {
     processModelCopy.laneSet = await this.filterOutInaccessibleLanes(processModelCopy.laneSet, identity);
     processModelCopy.flowNodes = this.getFlowNodesForLaneSet(processModelCopy.laneSet, processModel.flowNodes);
 
-    const processModelHasAccessibleStartEvent = this.checkIfProcessModelHasAccessibleStartEvents(processModelCopy);
-    if (!processModelHasAccessibleStartEvent) {
+    const userCannotAccessAnyStartEvents = !this.checkIfProcessModelHasAccessibleStartEvents(processModelCopy);
+    const originalProcessModelHasStartEvents = processModel.flowNodes.some((flowNode): boolean => flowNode.bpmnType === BpmnType.startEvent);
+
+    if (userCannotAccessAnyStartEvents && originalProcessModelHasStartEvents) {
       return undefined;
     }
 
+    // If the ProcessModel does not have any StartEvents to begin with, it should be returend.
+    // Otherwise, the end user would have no way of knowing that he deployed a ProcessModel without StartEvents.
     return processModelCopy;
   }
 
