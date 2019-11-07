@@ -125,7 +125,10 @@ export class CorrelationService implements ICorrelationService {
 
     const processInstanceFromRepo = await this.correlationRepository.getByProcessInstanceId(processInstanceId);
 
-    if (identity.userId !== processInstanceFromRepo.identity.userId) {
+    const isPublicInstance = processInstanceFromRepo.identity.userId === 'dummy_token' ||
+                             processInstanceFromRepo.identity.userId === 'ProcessEngineInternalUser';
+
+    if (!isPublicInstance && identity.userId !== processInstanceFromRepo.identity.userId) {
       const userIsSuperAdmin = await this.checkIfUserIsSuperAdmin(identity);
 
       if (!userIsSuperAdmin) {
