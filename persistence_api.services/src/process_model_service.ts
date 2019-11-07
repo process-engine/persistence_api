@@ -160,14 +160,6 @@ export class ProcessModelService implements IProcessModelService {
       throw new UnprocessableEntityError(namesDoNotMatchError);
     }
 
-    if (processsModel.id !== name) {
-
-      const namesDoNotMatchError = `The ProcessModel contained within the diagram "${name}" must also use the name "${name}"!`;
-      logger.error(namesDoNotMatchError);
-
-      throw new UnprocessableEntityError(namesDoNotMatchError);
-    }
-
     const processModelHasNoStartEvents = !processsModel.flowNodes.some((flowNode): boolean => flowNode.bpmnType === BpmnType.startEvent);
     if (processModelHasNoStartEvents) {
 
