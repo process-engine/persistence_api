@@ -1,0 +1,16 @@
+dist
+node_modules
+
+# OSX-finder info-files
+*.DS_Store
+
+# IDE configs
+.vscode/*
+!.vscode/launch.json
+.idea/
+*.iml
+*.iws
+.classpath
+.project
+.settings/
+
