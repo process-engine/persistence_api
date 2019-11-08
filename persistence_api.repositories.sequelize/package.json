@@ -1,6 +1,6 @@
 {
   "name": "@process-engine/persistence_api.repositories.sequelize",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Contains the sequelize-based repository implementation for the persistence API.",
   "main": "dist/commonjs/index.js",
   "typings": "dist/index.d.ts",
