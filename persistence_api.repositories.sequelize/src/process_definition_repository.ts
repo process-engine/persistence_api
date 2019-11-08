@@ -8,6 +8,7 @@ import {IDisposable} from '@essential-projects/bootstrapper_contracts';
 import {ConflictError, NotFoundError} from '@essential-projects/errors_ts';
 import {SequelizeConnectionManager} from '@essential-projects/sequelize_connection_manager';
 
+import {IIdentity} from '@essential-projects/iam_contracts';
 import {IProcessDefinitionRepository, ProcessDefinitionFromRepository} from '@process-engine/persistence_api.contracts';
 
 import {ProcessDefinitionModel} from './schemas';
@@ -48,7 +49,7 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
     logger.verbose('Done.');
   }
 
-  public async persistProcessDefinitions(name: string, xml: string, overwriteExisting = true): Promise<void> {
+  public async persistProcessDefinitions(name: string, xml: string, overwriteExisting = true, identity?: IIdentity): Promise<void> {
 
     // Note:
     // Unfortunately, sequelize doesn't have MIN/MAX operators for WHERE clauses.
@@ -90,6 +91,7 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
         name: name,
         xml: xml,
         hash: newProcessDefinitionHash,
+        identity: identity ? JSON.stringify(identity) : undefined,
       });
     } else {
 
@@ -97,6 +99,7 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
         name: name,
         xml: xml,
         hash: newProcessDefinitionHash,
+        identity: identity ? JSON.stringify(identity) : undefined,
       });
     }
   }
@@ -225,6 +228,7 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
     processDefinition.name = dataModel.name;
     processDefinition.xml = dataModel.xml;
     processDefinition.hash = dataModel.hash;
+    processDefinition.identity = dataModel.identity ? JSON.parse(dataModel.identity) : undefined;
     processDefinition.createdAt = dataModel.createdAt;
     processDefinition.updatedAt = dataModel.updatedAt;
 

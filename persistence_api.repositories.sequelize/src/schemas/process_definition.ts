@@ -17,6 +17,10 @@ export class ProcessDefinitionModel extends Model<ProcessDefinitionModel> {
   @Column({type: DataType.TEXT})
   public hash: string;
 
+  @AllowNull(true)
+  @Column({type: DataType.TEXT})
+  public identity: string;
+
   @CreatedAt
   public createdAt?: Date;
 

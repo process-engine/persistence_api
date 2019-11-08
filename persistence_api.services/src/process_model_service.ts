@@ -50,7 +50,7 @@ export class ProcessModelService implements IProcessModelService {
     await this.ensureUserHasClaim(identity, canWriteProcessModelClaim);
     await this.validateDefinition(name, xml);
 
-    return this.processDefinitionRepository.persistProcessDefinitions(name, xml, overwriteExisting);
+    return this.processDefinitionRepository.persistProcessDefinitions(name, xml, overwriteExisting, identity);
   }
 
   public async getProcessModels(identity: IIdentity, offset: number = 0, limit: number = 0): Promise<Array<Model.Process>> {

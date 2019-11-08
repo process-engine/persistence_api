@@ -1,3 +1,5 @@
+import {IIdentity} from '@essential-projects/iam_contracts';
+
 import {ProcessDefinitionFromRepository} from '../data_models/index';
 
 /**
@@ -9,15 +11,14 @@ export interface IProcessDefinitionRepository {
    * Writes a ProcessDefinition to the database.
    *
    * @async
-   * @param name              The name with which to persist the
-   *                          ProcessDefinition.
+   * @param name              The name with which to persist the ProcessDefinition.
    * @param xml               The ProcessDefinitions raw XML code.
-   * @param overwriteExisting If true, any existing ProcessDefinition with
-   *                          the same name will be overwritten.
+   * @param overwriteExisting If true, any existing ProcessDefinition with the same name will be overwritten.
+   * @param identity          Optional: The identity of the user persisting the ProcessDefinition.
    * @throws                  409, if a ProcessDefinition with the name already
    *                          exists and 'overwriteExisting' is set to 'false'.
    */
-  persistProcessDefinitions(name: string, xml: string, overwriteExisting?: boolean): Promise<void>;
+  persistProcessDefinitions(name: string, xml: string, overwriteExisting?: boolean, identity?: IIdentity): Promise<void>;
 
   /**
    * Gets a list of all stored ProcessDefinitions.
