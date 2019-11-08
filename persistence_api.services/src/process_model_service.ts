@@ -100,6 +100,10 @@ export class ProcessModelService implements IProcessModelService {
       return entry.id === processModelId;
     });
 
+    if (!processModel) {
+      throw new NotFoundError(`ProcessModel with id ${processModelId} not found!`);
+    }
+
     const filteredProcessModel = await this.filterInaccessibleProcessModelElements(identity, processModel);
 
     if (!filteredProcessModel) {
