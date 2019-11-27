@@ -30,6 +30,7 @@
     "bluebird": "^3.5.2",
     "bluebird-global": "^1.0.1",
     "loggerhythm": "^3.0.3",
+    "moment": "^2.24.0",
     "node-uuid": "^1.4.8",
     "sequelize": "^5.18.0",
     "sequelize-typescript": "1.1.0-beta.0"

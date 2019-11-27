@@ -1,4 +1,5 @@
 import {Logger} from 'loggerhythm';
+import * as moment from 'moment';
 
 import {DestroyOptions, FindOptions} from 'sequelize';
 import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
@@ -195,17 +196,17 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
 
     const matchingCorrelation = await CorrelationModel.findOne(queryParams);
 
-    const noMatchingCorrelationFound = matchingCorrelation === undefined;
-    if (noMatchingCorrelationFound) {
+    if (!matchingCorrelation) {
       throw new NotFoundError(`No ProcessInstance '${processInstanceId}' in Correlation ${correlationId} found!`);
     }
 
     matchingCorrelation.state = CorrelationState.finished;
+    matchingCorrelation.finishedAt = moment().toDate();
 
     await matchingCorrelation.save();
   }
 
-  public async finishProcessInstanceInCorrelationWithError(correlationId: string, processInstanceId: string, error: Error): Promise<void> {
+  public async finishProcessInstanceInCorrelationWithError(correlationId: string, processInstanceId: string, error: Error, terminatedBy?: IIdentity): Promise<void> {
     const queryParams: FindOptions = {
       where: {
         correlationId: correlationId,
@@ -215,13 +216,17 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
 
     const matchingCorrelation = await CorrelationModel.findOne(queryParams);
 
-    const noMatchingCorrelationFound = matchingCorrelation === undefined;
-    if (noMatchingCorrelationFound) {
+    if (!matchingCorrelation) {
       throw new NotFoundError(`No ProcessInstance '${processInstanceId}' in Correlation ${correlationId} found!`);
     }
 
     matchingCorrelation.state = CorrelationState.error;
     matchingCorrelation.error = this.serializeError(error);
+    matchingCorrelation.finishedAt = moment().toDate();
+
+    if (terminatedBy) {
+      matchingCorrelation.terminatedBy = JSON.stringify(terminatedBy);
+    }
 
     await matchingCorrelation.save();
   }
@@ -233,8 +238,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
       return (error as BaseError).serialize();
     }
 
-    const errorIsString = typeof error === 'string';
-    if (errorIsString) {
+    if (typeof error === 'string') {
       // For backwards compatibility.
       return error as string;
     }
@@ -257,7 +261,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     processInstance.processInstanceId = dataModel.processInstanceId;
     processInstance.processModelId = dataModel.processModelId;
     processInstance.processModelHash = dataModel.processModelHash;
-    processInstance.parentProcessInstanceId = dataModel.parentProcessInstanceId || undefined;
+    processInstance.parentProcessInstanceId = dataModel.parentProcessInstanceId ?? undefined;
     processInstance.identity = dataModel.identity ? this.tryParse(dataModel.identity) : undefined;
     processInstance.createdAt = dataModel.createdAt;
     processInstance.updatedAt = dataModel.updatedAt;
@@ -265,9 +269,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     processInstance.finishedAt = dataModel.finishedAt;
     processInstance.terminatedBy = dataModel.terminatedBy ? this.tryParse(dataModel.terminatedBy) : undefined;
 
-    const dataModelHasError = dataModel.error !== undefined;
-    if (dataModelHasError) {
-
+    if (dataModel.error) {
       const essentialProjectsError = this.tryDeserializeEssentialProjectsError(dataModel.error);
 
       const errorIsFromEssentialProjects = essentialProjectsError !== undefined;
