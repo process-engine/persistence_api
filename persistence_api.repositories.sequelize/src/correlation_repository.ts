@@ -206,7 +206,13 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     await matchingCorrelation.save();
   }
 
-  public async finishProcessInstanceInCorrelationWithError(correlationId: string, processInstanceId: string, error: Error, terminatedBy?: IIdentity): Promise<void> {
+  public async finishProcessInstanceInCorrelationWithError(
+    correlationId: string,
+    processInstanceId: string,
+    error: Error,
+    terminatedBy?: IIdentity,
+  ): Promise<void> {
+
     const queryParams: FindOptions = {
       where: {
         correlationId: correlationId,

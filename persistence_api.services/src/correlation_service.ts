@@ -40,7 +40,6 @@ export class CorrelationService implements ICorrelationService {
     iamService: IIAMService,
     processDefinitionRepository: IProcessDefinitionRepository,
   ) {
-
     this.correlationRepository = correlationRepository;
     this.iamService = iamService;
     this.processDefinitionRepository = processDefinitionRepository;
@@ -243,7 +242,15 @@ export class CorrelationService implements ICorrelationService {
     error: Error,
   ): Promise<void> {
     await this.ensureUserHasClaim(identity, canReadProcessModelClaim);
-    await this.correlationRepository.finishProcessInstanceInCorrelationWithError(correlationId, processInstanceId, error);
+
+    const terminatedByUserRegEx = /terminated by user/i;
+    const isTerminationError = terminatedByUserRegEx.test(error.message);
+
+    if (isTerminationError) {
+      await this.correlationRepository.finishProcessInstanceInCorrelationWithError(correlationId, processInstanceId, error, identity);
+    } else {
+      await this.correlationRepository.finishProcessInstanceInCorrelationWithError(correlationId, processInstanceId, error);
+    }
   }
 
   private async filterProcessInstancesFromRepoByIdentity(
@@ -325,8 +332,7 @@ export class CorrelationService implements ICorrelationService {
           ? processInstanceFromRepo.state
           : CorrelationState.running;
 
-        const processInstanceHasErrorAttached = processInstanceFromRepo.error !== undefined && processInstanceFromRepo.error !== null;
-        if (processInstanceHasErrorAttached) {
+        if (processInstanceFromRepo.error) {
           correlation.state = CorrelationState.error;
           correlation.error = processInstanceFromRepo.error;
         }
@@ -358,10 +364,7 @@ export class CorrelationService implements ICorrelationService {
     processInstance.finishedAt = processInstanceFromRepo.finishedAt;
     processInstance.terminatedBy = processInstanceFromRepo.terminatedBy;
 
-    const processInstanceHasErrorAttached = processInstanceFromRepo.error !== undefined && processInstanceFromRepo.error !== null;
-    if (processInstanceHasErrorAttached) {
-      processInstance.error = processInstanceFromRepo.error;
-    }
+    processInstance.error = processInstanceFromRepo.error;
 
     return processInstance;
   }
