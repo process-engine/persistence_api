@@ -4,7 +4,7 @@ import {DestroyOptions, Op as Operators, Transaction} from 'sequelize';
 import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
 
 import {IDisposable} from '@essential-projects/bootstrapper_contracts';
-import {BaseError, NotFoundError, isEssentialProjectsError} from '@essential-projects/errors_ts';
+import {deserializeError, NotFoundError, serializeError} from '@essential-projects/errors_ts';
 import {SequelizeConnectionManager} from '@essential-projects/sequelize_connection_manager';
 import {
   BpmnType,
@@ -611,7 +611,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
 
     const stateChangeHasErrorAttached = error !== undefined;
     if (stateChangeHasErrorAttached) {
-      matchingFlowNodeInstance.error = this.serializeError(error);
+      matchingFlowNodeInstance.error = serializeError(error);
     }
 
     const createTransaction = await this.sequelizeInstance.transaction();
@@ -651,21 +651,6 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
     await ProcessTokenModel.create(createParams, {transaction: createTransaction});
   }
 
-  private serializeError(error: Error | string): string {
-
-    const errorIsFromEssentialProjects = isEssentialProjectsError(error);
-    if (errorIsFromEssentialProjects) {
-      return (error as BaseError).serialize();
-    }
-
-    const errorIsString = typeof error === 'string';
-    if (errorIsString) {
-      return error as string;
-    }
-
-    return JSON.stringify(error);
-  }
-
   private convertFlowNodeInstanceToRuntimeObject(dataModel: FlowNodeInstanceModel): FlowNodeInstance {
 
     const runtimeFlowNodeInstance = new FlowNodeInstance();
@@ -685,14 +670,8 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
 
     const dataModelHasError = dataModel.error !== undefined;
     if (dataModelHasError) {
-
-      const essentialProjectsError = this.tryDeserializeEssentialProjectsError(dataModel.error);
-
-      const errorIsFromEssentialProjects = essentialProjectsError !== undefined;
-
-      runtimeFlowNodeInstance.error = errorIsFromEssentialProjects
-        ? essentialProjectsError
-        : this.tryParse(dataModel.error);
+      // TODO: Fix type of "error" property - is "string", should be "Error"
+      runtimeFlowNodeInstance.error = <any> deserializeError(dataModel.error);
     }
 
     const processTokens = dataModel.processTokens.map((currentToken: ProcessTokenModel): ProcessToken => {
@@ -728,14 +707,6 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
     } catch (error) {
       // Value is not a JSON - return it as it is.
       return value;
-    }
-  }
-
-  private tryDeserializeEssentialProjectsError(value: string): Error {
-    try {
-      return BaseError.deserialize(value);
-    } catch (error) {
-      return undefined;
     }
   }
 

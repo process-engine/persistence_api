@@ -5,7 +5,7 @@ import {DestroyOptions, FindOptions} from 'sequelize';
 import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
 
 import {IDisposable} from '@essential-projects/bootstrapper_contracts';
-import {BaseError, NotFoundError, isEssentialProjectsError} from '@essential-projects/errors_ts';
+import {deserializeError, NotFoundError, serializeError} from '@essential-projects/errors_ts';
 import {IIdentity} from '@essential-projects/iam_contracts';
 import {SequelizeConnectionManager} from '@essential-projects/sequelize_connection_manager';
 
@@ -227,7 +227,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     }
 
     matchingCorrelation.state = CorrelationState.error;
-    matchingCorrelation.error = this.serializeError(error);
+    matchingCorrelation.error = serializeError(error);
     matchingCorrelation.finishedAt = moment().toDate();
 
     if (terminatedBy) {
@@ -235,21 +235,6 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     }
 
     await matchingCorrelation.save();
-  }
-
-  private serializeError(error: Error | string): string {
-
-    const errorIsFromEssentialProjects = isEssentialProjectsError(error);
-    if (errorIsFromEssentialProjects) {
-      return (error as BaseError).serialize();
-    }
-
-    if (typeof error === 'string') {
-      // For backwards compatibility.
-      return error as string;
-    }
-
-    return JSON.stringify(error);
   }
 
   /**
@@ -276,13 +261,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     processInstance.terminatedBy = dataModel.terminatedBy ? this.tryParse(dataModel.terminatedBy) : undefined;
 
     if (dataModel.error) {
-      const essentialProjectsError = this.tryDeserializeEssentialProjectsError(dataModel.error);
-
-      const errorIsFromEssentialProjects = essentialProjectsError !== undefined;
-
-      processInstance.error = errorIsFromEssentialProjects
-        ? essentialProjectsError
-        : this.tryParse(dataModel.error);
+      processInstance.error = deserializeError(dataModel.error);
     }
 
     return processInstance;
@@ -295,14 +274,6 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     } catch (error) {
       // Value is not a JSON - return it as it is.
       return value;
-    }
-  }
-
-  private tryDeserializeEssentialProjectsError(value: string): Error {
-    try {
-      return BaseError.deserialize(value);
-    } catch (error) {
-      return undefined;
     }
   }
 
