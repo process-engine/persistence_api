@@ -668,8 +668,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
     runtimeFlowNodeInstance.parentProcessInstanceId = dataModel.parentProcessInstanceId;
     runtimeFlowNodeInstance.previousFlowNodeInstanceId = dataModel.previousFlowNodeInstanceId;
 
-    const dataModelHasError = dataModel.error !== undefined;
-    if (dataModelHasError) {
+    if (dataModel.error) {
       // TODO: Fix type of "error" property - is "string", should be "Error"
       runtimeFlowNodeInstance.error = <any> deserializeError(dataModel.error);
     }
