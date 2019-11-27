@@ -262,6 +262,8 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     processInstance.createdAt = dataModel.createdAt;
     processInstance.updatedAt = dataModel.updatedAt;
     processInstance.state = dataModel.state;
+    processInstance.finishedAt = dataModel.finishedAt;
+    processInstance.terminatedBy = dataModel.terminatedBy ? this.tryParse(dataModel.terminatedBy) : undefined;
 
     const dataModelHasError = dataModel.error !== undefined;
     if (dataModelHasError) {

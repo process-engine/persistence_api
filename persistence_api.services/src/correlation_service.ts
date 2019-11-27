@@ -355,6 +355,8 @@ export class CorrelationService implements ICorrelationService {
     processInstance.createdAt = processInstanceFromRepo.createdAt;
     processInstance.state = processInstanceFromRepo.state;
     processInstance.identity = processInstanceFromRepo.identity;
+    processInstance.finishedAt = processInstanceFromRepo.finishedAt;
+    processInstance.terminatedBy = processInstanceFromRepo.terminatedBy;
 
     const processInstanceHasErrorAttached = processInstanceFromRepo.error !== undefined && processInstanceFromRepo.error !== null;
     if (processInstanceHasErrorAttached) {
