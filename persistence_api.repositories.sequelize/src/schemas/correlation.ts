@@ -39,6 +39,14 @@ export class CorrelationModel extends Model<CorrelationModel> {
   @Column
   public parentProcessInstanceId: string;
 
+  @AllowNull(true)
+  @Column(DataType.DATE)
+  public finishedAt?: Date;
+
+  @AllowNull(true)
+  @Column(DataType.TEXT)
+  public terminatedBy?: string;
+
   @CreatedAt
   public createdAt?: Date;
 
