@@ -7,7 +7,7 @@ import {DestroyOptions, FindOptions, Op as Operators} from 'sequelize';
 import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
 
 import {IDisposable} from '@essential-projects/bootstrapper_contracts';
-import {deserializeError, NotFoundError, serializeError} from '@essential-projects/errors_ts';
+import {NotFoundError, deserializeError, serializeError} from '@essential-projects/errors_ts';
 import {IIdentity} from '@essential-projects/iam_contracts';
 import {SequelizeConnectionManager} from '@essential-projects/sequelize_connection_manager';
 import {

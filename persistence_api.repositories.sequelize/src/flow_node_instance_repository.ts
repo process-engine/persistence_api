@@ -4,7 +4,7 @@ import {DestroyOptions, Op as Operators, Transaction} from 'sequelize';
 import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
 
 import {IDisposable} from '@essential-projects/bootstrapper_contracts';
-import {deserializeError, NotFoundError, serializeError} from '@essential-projects/errors_ts';
+import {NotFoundError, deserializeError, serializeError} from '@essential-projects/errors_ts';
 import {SequelizeConnectionManager} from '@essential-projects/sequelize_connection_manager';
 import {
   BpmnType,
