@@ -122,7 +122,8 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
     // We cannot simply use something like "GROUP BY name", because Postgres won't allow it on non-index columns.
     const processDefinitions = await Promise.map<string, ProcessDefinitionModel>(namesAsString, this.getProcessDefinitionByName.bind(this));
 
-    const runtimeProcessDefinitions = processDefinitions.map<ProcessDefinitionFromRepository>(this.convertToProcessDefinitionRuntimeObject.bind(this));
+    const runtimeProcessDefinitions = processDefinitions
+      .map<ProcessDefinitionFromRepository>(this.convertToProcessDefinitionRuntimeObject.bind(this));
 
     return runtimeProcessDefinitions;
   }
@@ -224,7 +225,7 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
 
   private convertToProcessDefinitionRuntimeObject(dataModel: ProcessDefinitionModel): ProcessDefinitionFromRepository {
 
-    function tryParse(value) {
+    function tryParse(value): IIdentity {
       try {
         return JSON.parse(value);
       } catch (error) {
