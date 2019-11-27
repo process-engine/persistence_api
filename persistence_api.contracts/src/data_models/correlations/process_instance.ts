@@ -18,5 +18,7 @@ export class ProcessInstance {
   public error: Error;
   public identity: IIdentity;
   public createdAt?: Date;
+  public finishedAt?: Date;
+  public terminatedBy?: IIdentity;
 
 }
