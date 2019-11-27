@@ -22,7 +22,7 @@
   "homepage": "https://github.com/process-engine/persistence_api#readme",
   "dependencies": {
     "@essential-projects/iam_contracts": "^3.4.1",
-    "@essential-projects/errors_ts": "^1.4.3",
+    "@essential-projects/errors_ts": "^1.6.0",
     "@process-engine/logging_api_contracts": "2.0.0",
     "@process-engine/persistence_api.contracts": "feature~add_terminated_by_field"
   },

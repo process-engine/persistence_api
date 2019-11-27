@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/process-engine/persistence_api#readme",
   "dependencies": {
-    "@essential-projects/errors_ts": "^1.4.4",
+    "@essential-projects/errors_ts": "^1.6.0",
     "@essential-projects/iam_contracts": "^3.4.1",
     "@process-engine/persistence_api.contracts": "feature~add_terminated_by_field",
     "bluebird-global": "^1.0.1",
