@@ -267,7 +267,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     processInstance.processInstanceId = dataModel.processInstanceId;
     processInstance.processModelId = dataModel.processModelId;
     processInstance.processModelHash = dataModel.processModelHash;
-    processInstance.parentProcessInstanceId = dataModel.parentProcessInstanceId ?? undefined;
+    processInstance.parentProcessInstanceId = dataModel.parentProcessInstanceId;
     processInstance.identity = dataModel.identity ? this.tryParse(dataModel.identity) : undefined;
     processInstance.createdAt = dataModel.createdAt;
     processInstance.updatedAt = dataModel.updatedAt;
