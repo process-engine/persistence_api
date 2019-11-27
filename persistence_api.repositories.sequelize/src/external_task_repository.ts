@@ -7,7 +7,7 @@ import {DestroyOptions, FindOptions, Op as Operators} from 'sequelize';
 import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
 
 import {IDisposable} from '@essential-projects/bootstrapper_contracts';
-import {BaseError, NotFoundError, isEssentialProjectsError} from '@essential-projects/errors_ts';
+import {NotFoundError, deserializeError, serializeError} from '@essential-projects/errors_ts';
 import {IIdentity} from '@essential-projects/iam_contracts';
 import {SequelizeConnectionManager} from '@essential-projects/sequelize_connection_manager';
 import {
@@ -190,7 +190,7 @@ export class ExternalTaskRepository implements IExternalTaskRepository, IDisposa
       },
     });
 
-    externalTask.error = this.serializeError(error);
+    externalTask.error = serializeError(error);
     externalTask.state = ExternalTaskState.finished;
     externalTask.finishedAt = moment().toDate();
     await externalTask.save();
@@ -208,21 +208,6 @@ export class ExternalTaskRepository implements IExternalTaskRepository, IDisposa
     externalTask.state = ExternalTaskState.finished;
     externalTask.finishedAt = moment().toDate();
     await externalTask.save();
-  }
-
-  private serializeError(error: Error | string): string {
-
-    const errorIsFromEssentialProjects = isEssentialProjectsError(error);
-    if (errorIsFromEssentialProjects) {
-      return (error as BaseError).serialize();
-    }
-
-    const errorIsString = typeof error === 'string';
-    if (errorIsString) {
-      return error as string;
-    }
-
-    return JSON.stringify(error);
   }
 
   /**
@@ -272,16 +257,8 @@ export class ExternalTaskRepository implements IExternalTaskRepository, IDisposa
 
     let error: Error;
 
-    const dataModelHasError = dataModel.error !== undefined;
-    if (dataModelHasError) {
-
-      const essentialProjectsError: Error = this.tryDeserializeEssentialProjectsError(dataModel.error);
-
-      const errorIsFromEssentialProjects = essentialProjectsError !== undefined;
-
-      error = errorIsFromEssentialProjects
-        ? essentialProjectsError
-        : this.tryParse(dataModel.error);
+    if (dataModel.error) {
+      error = deserializeError(dataModel.error);
     }
 
     return [identity, payload, result, error];
@@ -293,14 +270,6 @@ export class ExternalTaskRepository implements IExternalTaskRepository, IDisposa
     } catch (error) {
       // Value is not a JSON - return it as it is.
       return value;
-    }
-  }
-
-  private tryDeserializeEssentialProjectsError(value: string): Error {
-    try {
-      return BaseError.deserialize(value);
-    } catch (error) {
-      return undefined;
     }
   }
 

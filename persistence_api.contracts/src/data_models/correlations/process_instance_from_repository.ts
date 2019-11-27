@@ -17,5 +17,7 @@ export class ProcessInstanceFromRepository {
   public identity: IIdentity;
   public createdAt: Date;
   public updatedAt: Date;
+  public finishedAt?: Date;
+  public terminatedBy?: IIdentity;
 
 }

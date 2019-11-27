@@ -1,10 +1,11 @@
 import {Logger} from 'loggerhythm';
+import * as moment from 'moment';
 
 import {DestroyOptions, FindOptions} from 'sequelize';
 import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
 
 import {IDisposable} from '@essential-projects/bootstrapper_contracts';
-import {BaseError, NotFoundError, isEssentialProjectsError} from '@essential-projects/errors_ts';
+import {NotFoundError, deserializeError, serializeError} from '@essential-projects/errors_ts';
 import {IIdentity} from '@essential-projects/iam_contracts';
 import {SequelizeConnectionManager} from '@essential-projects/sequelize_connection_manager';
 
@@ -195,17 +196,23 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
 
     const matchingCorrelation = await CorrelationModel.findOne(queryParams);
 
-    const noMatchingCorrelationFound = matchingCorrelation === undefined;
-    if (noMatchingCorrelationFound) {
+    if (!matchingCorrelation) {
       throw new NotFoundError(`No ProcessInstance '${processInstanceId}' in Correlation ${correlationId} found!`);
     }
 
     matchingCorrelation.state = CorrelationState.finished;
+    matchingCorrelation.finishedAt = moment().toDate();
 
     await matchingCorrelation.save();
   }
 
-  public async finishProcessInstanceInCorrelationWithError(correlationId: string, processInstanceId: string, error: Error): Promise<void> {
+  public async finishProcessInstanceInCorrelationWithError(
+    correlationId: string,
+    processInstanceId: string,
+    error: Error,
+    terminatedBy?: IIdentity,
+  ): Promise<void> {
+
     const queryParams: FindOptions = {
       where: {
         correlationId: correlationId,
@@ -215,31 +222,19 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
 
     const matchingCorrelation = await CorrelationModel.findOne(queryParams);
 
-    const noMatchingCorrelationFound = matchingCorrelation === undefined;
-    if (noMatchingCorrelationFound) {
+    if (!matchingCorrelation) {
       throw new NotFoundError(`No ProcessInstance '${processInstanceId}' in Correlation ${correlationId} found!`);
     }
 
     matchingCorrelation.state = CorrelationState.error;
-    matchingCorrelation.error = this.serializeError(error);
+    matchingCorrelation.error = serializeError(error);
+    matchingCorrelation.finishedAt = moment().toDate();
+
+    if (terminatedBy) {
+      matchingCorrelation.terminatedBy = JSON.stringify(terminatedBy);
+    }
 
     await matchingCorrelation.save();
-  }
-
-  private serializeError(error: Error | string): string {
-
-    const errorIsFromEssentialProjects = isEssentialProjectsError(error);
-    if (errorIsFromEssentialProjects) {
-      return (error as BaseError).serialize();
-    }
-
-    const errorIsString = typeof error === 'string';
-    if (errorIsString) {
-      // For backwards compatibility.
-      return error as string;
-    }
-
-    return JSON.stringify(error);
   }
 
   /**
@@ -257,22 +252,16 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     processInstance.processInstanceId = dataModel.processInstanceId;
     processInstance.processModelId = dataModel.processModelId;
     processInstance.processModelHash = dataModel.processModelHash;
-    processInstance.parentProcessInstanceId = dataModel.parentProcessInstanceId || undefined;
+    processInstance.parentProcessInstanceId = dataModel.parentProcessInstanceId;
     processInstance.identity = dataModel.identity ? this.tryParse(dataModel.identity) : undefined;
     processInstance.createdAt = dataModel.createdAt;
     processInstance.updatedAt = dataModel.updatedAt;
     processInstance.state = dataModel.state;
+    processInstance.finishedAt = dataModel.finishedAt;
+    processInstance.terminatedBy = dataModel.terminatedBy ? this.tryParse(dataModel.terminatedBy) : undefined;
 
-    const dataModelHasError = dataModel.error !== undefined;
-    if (dataModelHasError) {
-
-      const essentialProjectsError = this.tryDeserializeEssentialProjectsError(dataModel.error);
-
-      const errorIsFromEssentialProjects = essentialProjectsError !== undefined;
-
-      processInstance.error = errorIsFromEssentialProjects
-        ? essentialProjectsError
-        : this.tryParse(dataModel.error);
+    if (dataModel.error) {
+      processInstance.error = deserializeError(dataModel.error);
     }
 
     return processInstance;
@@ -285,14 +274,6 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
     } catch (error) {
       // Value is not a JSON - return it as it is.
       return value;
-    }
-  }
-
-  private tryDeserializeEssentialProjectsError(value: string): Error {
-    try {
-      return BaseError.deserialize(value);
-    } catch (error) {
-      return undefined;
     }
   }
 

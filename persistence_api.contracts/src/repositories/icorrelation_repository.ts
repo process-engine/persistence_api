@@ -137,7 +137,14 @@ export interface ICorrelationRepository {
    * @param  correlationId     The ID of the Correlation to finish erroneously.
    * @param  processInstanceId The ID of the ProcessInstance to finish.
    * @param  error             The error that occurred.
+   * @param  terminatedBy      Optional: If the ProcessInstance was terminated by a user,
+   *                           this will contain the terminating users identity.
    * @throws {NotFoundError}   When no matching correlation was found.
    */
-  finishProcessInstanceInCorrelationWithError(correlationId: string, processInstanceId: string, error: Error): Promise<void>;
+  finishProcessInstanceInCorrelationWithError(
+    correlationId: string,
+    processInstanceId: string,
+    error: Error,
+    terminatedBy?: IIdentity,
+  ): Promise<void>;
 }
