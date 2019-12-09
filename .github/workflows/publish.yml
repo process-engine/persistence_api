@@ -1,0 +1,201 @@
+name: Node CI
+
+on:
+  push:
+    branches:
+      - "*"
+      - "*/*"
+
+jobs:
+  build:
+    name: 'Build, Lint & Test'
+    runs-on: ubuntu-latest
+    if: "!(contains(github.actor, 'process-engine-ci') || contains(github.actor, 'admin'))"
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        version: 12.x
+
+    - name: 'Install dependencies'
+      run: npm install --no-package-lock
+
+    - name: 'Build Contracts'
+      run: npm run build
+      working-directory: ./persistence_api.contracts
+
+    - name: 'Lint Contracts'
+      run: npm run lint
+      working-directory: ./persistence_api.contracts
+
+    - name: 'Build Service'
+      run: npm run build
+      working-directory: ./persistence_api.services
+
+    - name: 'Lint Service'
+      run: npm run lint
+      working-directory: ./persistence_api.services
+
+    - name: 'Run Tests for Service'
+      run: npm test
+      working-directory: ./persistence_api.services
+
+    - name: 'Build Repository Sequelize'
+      run: npm run build
+      working-directory: ./persistence_api.repositories.sequelize
+
+    - name: 'Lint Repository Sequelize'
+      run: npm run lint
+      working-directory: ./persistence_api.repositories.sequelize
+
+    - name: 'Run Tests for Repository Sequelize'
+      run: npm test
+      working-directory: ./persistence_api.repositories.sequelize
+
+    - name: 'Build Use Cases'
+      run: npm run build
+      working-directory: ./persistence_api.use_cases
+
+    - name: 'Lint Use Cases'
+      run: npm run lint
+      working-directory: ./persistence_api.use_cases
+
+    - name: 'Run Tests for Use Cases'
+      run: npm test
+      working-directory: ./persistence_api.use_cases
+
+    - name: 'Prepare version for Contracts'
+      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir
+      working-directory: ./persistence_api.contracts
+
+    - name: 'Publish Contracts'
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name
+      working-directory: ./persistence_api.contracts
+
+    - name: Cache Workdir
+      uses: actions/cache@v1
+      with:
+        path: "."
+        key: npm-${{ github.sha }}
+
+  publish_service:
+    name: 'Publish Persistence API Service'
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        version: 12.x
+
+    - name: Cache Workdir
+      uses: actions/cache@v1
+      with:
+        path: "."
+        key: npm-${{ github.sha }}
+
+    - name: 'Prepare version'
+      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir
+      working-directory: ./persistence_api.services
+
+    - name: 'Publish'
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name
+      working-directory: ./persistence_api.services
+
+  publish_repository:
+    name: 'Publish Persistence API Repository'
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        version: 12.x
+
+    - name: Cache Workdir
+      uses: actions/cache@v1
+      with:
+        path: "."
+        key: npm-${{ github.sha }}
+
+    - name: 'Prepare version'
+      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir
+      working-directory: ./persistence_api.repositories.sequelize
+
+    - name: 'Publish'
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name
+      working-directory: ./persistence_api.repositories.sequelize
+
+  publish_use_cases:
+    name: 'Publish Persistence API Use Cases'
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        version: 12.x
+
+    - name: Cache Workdir
+      uses: actions/cache@v1
+      with:
+        path: "."
+        key: npm-${{ github.sha }}
+
+    - name: 'Prepare version'
+      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir
+      working-directory: ./persistence_api.use_cases
+
+    - name: 'Publish'
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: ./node_modules/.bin/ci_tools publish-npm-package --ignore-scripts --create-tag-from-branch-name
+      working-directory: ./persistence_api.use_cases
+
+  publish_github:
+    name: 'Publish GitHub Release'
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        version: 12.x
+
+    - name: Cache Workdir
+      uses: actions/cache@v1
+      with:
+        path: "."
+        key: npm-${{ github.sha }}
+
+    - name: 'Prepare version'
+      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir
+
+    - name: 'Commit & tag version'
+      env:
+        GH_USER: "process-engine-ci"
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        ./node_modules/.bin/ci_tools commit-and-tag-version --only-on-primary-branches
+        ./node_modules/.bin/ci_tools update-github-release --only-on-primary-branches --use-title-and-text-from-git-tag
