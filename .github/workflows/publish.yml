@@ -84,7 +84,7 @@ jobs:
         key: npm-${{ github.sha }}
 
   publish_service:
-    name: 'Publish Persistence API Service'
+    name: 'Publish Service'
     runs-on: ubuntu-latest
     needs: build
 
@@ -113,7 +113,7 @@ jobs:
       working-directory: ./persistence_api.services
 
   publish_repository:
-    name: 'Publish Persistence API Repository'
+    name: 'Publish Repository'
     runs-on: ubuntu-latest
     needs: build
 
@@ -142,7 +142,7 @@ jobs:
       working-directory: ./persistence_api.repositories.sequelize
 
   publish_use_cases:
-    name: 'Publish Persistence API Use Cases'
+    name: 'Publish Use Cases'
     runs-on: ubuntu-latest
     needs: build
 
