@@ -110,7 +110,6 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
     const names = await ProcessDefinitionModel.findAll({
       attributes: ['name'],
       group: 'name',
-      order: [['createdAt', 'DESC']],
     });
 
     const namesAsString = names.map((entry: ProcessDefinitionModel): string => {
