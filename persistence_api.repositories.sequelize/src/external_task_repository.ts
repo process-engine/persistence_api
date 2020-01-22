@@ -108,6 +108,7 @@ export class ExternalTaskRepository implements IExternalTaskRepository, IDisposa
         processInstanceId: processInstanceId,
         flowNodeInstanceId: flowNodeInstanceId,
       },
+      order: [['createdAt', 'DESC']],
     });
 
     if (!result) {
@@ -141,6 +142,7 @@ export class ExternalTaskRepository implements IExternalTaskRepository, IDisposa
           ],
         },
       },
+      order: [['createdAt', 'DESC']],
     };
 
     if (maxTasks > 0) {

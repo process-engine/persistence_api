@@ -79,6 +79,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
   public async getAll(offset: number = 0, limit: number = 0): Promise<Array<ProcessInstanceFromRepository>> {
 
     const correlations = await CorrelationModel.findAll({
+      order: [['createdAt', 'DESC']],
       ...this.buildPagination(offset, limit),
     });
 
@@ -93,7 +94,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
       where: {
         correlationId: correlationId,
       },
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
       ...this.buildPagination(offset, limit),
     };
 
@@ -110,7 +111,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
       where: {
         processModelId: processModelId,
       },
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
       ...this.buildPagination(offset, limit),
     };
 
@@ -150,7 +151,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
       where: {
         parentProcessInstanceId: processInstanceId,
       },
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
       ...this.buildPagination(offset, limit),
     };
 

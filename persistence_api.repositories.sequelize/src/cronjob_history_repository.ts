@@ -59,6 +59,7 @@ export class CronjobHistoryRepository implements ICronjobHistoryRepository, IDis
 
     const cronjobHistories = await CronjobHistoryEntryModel.findAll({
       ...this.buildPagination(offset, limit),
+      order: [['createdAt', 'DESC']],
     });
 
     const cronjobHistoriesRuntime = cronjobHistories.map<Cronjob>(this.convertToCronjobRuntimeObject.bind(this));
