@@ -110,6 +110,7 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
     const names = await ProcessDefinitionModel.findAll({
       attributes: ['name'],
       group: 'name',
+      order: [['createdAt', 'DESC']],
     });
 
     const namesAsString = names.map((entry: ProcessDefinitionModel): string => {
@@ -153,16 +154,6 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
     return definitonRuntime;
   }
 
-  public async deleteProcessDefinitionById(processModelId: string): Promise<void> {
-    const queryParams: DestroyOptions = {
-      where: {
-        name: processModelId,
-      },
-    };
-
-    await ProcessDefinitionModel.destroy(queryParams);
-  }
-
   public async getHistoryByName(name: string): Promise<Array<ProcessDefinitionFromRepository>> {
 
     const query: FindOptions = {
@@ -203,6 +194,16 @@ export class ProcessDefinitionRepository implements IProcessDefinitionRepository
     const definitonRuntime = this.convertToProcessDefinitionRuntimeObject(definition);
 
     return definitonRuntime;
+  }
+
+  public async deleteProcessDefinitionById(processModelId: string): Promise<void> {
+    const queryParams: DestroyOptions = {
+      where: {
+        name: processModelId,
+      },
+    };
+
+    await ProcessDefinitionModel.destroy(queryParams);
   }
 
   private async createHashForProcessDefinition(xml: string): Promise<string> {

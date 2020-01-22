@@ -125,7 +125,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['processTokens', 'createdAt'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
@@ -146,7 +146,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['id', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
@@ -169,6 +169,9 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         as: 'processTokens',
         required: true,
       }],
+      order: [
+        ['createdAt', 'DESC'],
+      ],
       ...this.buildPagination(offset, limit),
     });
 
@@ -191,6 +194,9 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         as: 'processTokens',
         required: true,
       }],
+      order: [
+        ['createdAt', 'DESC'],
+      ],
       ...this.buildPagination(offset, limit),
     });
 
@@ -219,6 +225,9 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         as: 'processTokens',
         required: true,
       }],
+      order: [
+        ['createdAt', 'DESC'],
+      ],
       ...this.buildPagination(offset, limit),
     });
 
@@ -239,7 +248,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['id', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
@@ -260,7 +269,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['id', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
@@ -282,7 +291,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['id', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
@@ -309,6 +318,9 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         as: 'processTokens',
         required: true,
       }],
+      order: [
+        ['createdAt', 'DESC'],
+      ],
       ...this.buildPagination(offset, limit),
     });
 
@@ -330,7 +342,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['id', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
@@ -353,7 +365,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['id', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
@@ -376,7 +388,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['id', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
@@ -398,7 +410,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['id', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
@@ -430,7 +442,7 @@ export class FlowNodeInstanceRepository implements IFlowNodeInstanceRepository, 
         required: true,
       }],
       order: [
-        ['id', 'ASC'],
+        ['createdAt', 'DESC'],
       ],
       ...this.buildPagination(offset, limit),
     });
