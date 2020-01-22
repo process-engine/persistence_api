@@ -23,7 +23,7 @@
   "dependencies": {
     "@essential-projects/errors_ts": "^1.6.0",
     "@essential-projects/iam_contracts": "^3.4.1",
-    "@process-engine/persistence_api.contracts": "feature~unify_sort_directions",
+    "@process-engine/persistence_api.contracts": "1.4.0-alpha.1",
     "bluebird-global": "^1.0.1",
     "clone": "^2.1.2",
     "loggerhythm": "^3.0.3"
