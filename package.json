@@ -1,6 +1,6 @@
 {
   "name": "@process-engine/persistence_api",
-  "version": "1.4.1-alpha.1",
+  "version": "1.4.2",
   "description": "",
   "main": "index.js",
   "scripts": {

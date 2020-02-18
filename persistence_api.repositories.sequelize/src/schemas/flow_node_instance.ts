@@ -63,7 +63,7 @@ export class FlowNodeInstanceModel extends Model<FlowNodeInstanceModel> {
   public error: string;
 
   @AllowNull(true)
-  @Column(DataType.STRING)
+  @Column(DataType.TEXT)
   public previousFlowNodeInstanceId: string;
 
   @HasMany((): typeof ProcessTokenModel => ProcessTokenModel, {
