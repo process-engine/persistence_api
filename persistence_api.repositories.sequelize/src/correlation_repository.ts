@@ -167,6 +167,7 @@ export class CorrelationRepository implements ICorrelationRepository, IDisposabl
       where: {
         state: state,
       },
+      order: [['createdAt', 'DESC']],
       ...this.buildPagination(offset, limit),
     };
 
