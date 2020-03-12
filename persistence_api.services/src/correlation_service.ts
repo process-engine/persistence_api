@@ -231,7 +231,6 @@ export class CorrelationService implements ICorrelationService {
   }
 
   public async finishProcessInstanceInCorrelation(identity: IIdentity, correlationId: string, processInstanceId: string): Promise<void> {
-    await this.ensureUserHasClaim(identity, canReadProcessModelClaim);
     await this.correlationRepository.finishProcessInstanceInCorrelation(correlationId, processInstanceId);
   }
 
@@ -241,8 +240,6 @@ export class CorrelationService implements ICorrelationService {
     processInstanceId: string,
     error: Error,
   ): Promise<void> {
-    await this.ensureUserHasClaim(identity, canReadProcessModelClaim);
-
     const terminatedByUserRegEx = /terminated by user/i;
     const isTerminationError = terminatedByUserRegEx.test(error.message);
 
