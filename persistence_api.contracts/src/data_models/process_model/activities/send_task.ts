@@ -18,9 +18,20 @@ export class SendTask extends Activity {
   }
 
   /**
+   * The interval in which a SendTask should re-send its message.
+   * Defaults to 500ms.
+   */
+  public retryIntervalInMs: number = 500;
+  /**
+   * Optional: The maximum number of retries.
+   * If not set, the SendTask will keep sending its message indefinetly, until it receives a response.
+   */
+  public maxRetries?: number;
+
+  /**
    * This property contains the user defined message which should be
    * send to a receive task.
-  ‚ */
+   */
   public messageEventDefinition: MessageEventDefinition;
 
 }
