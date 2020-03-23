@@ -92,8 +92,11 @@ jobs:
         path: "."
         key: npm-${{ github.sha }}
 
+    - name: 'Copy and Commit Version'
+      run: ./node_modules/.bin/ci_tools copy-and-commit-version-for-subpackage persistence_api.contracts/
+
     - name: 'Prepare version for Contracts'
-      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir
+      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir --force
       working-directory: ./persistence_api.contracts
 
     - name: 'Publish Contracts'
@@ -121,8 +124,11 @@ jobs:
         path: "."
         key: npm-${{ github.sha }}
 
+    - name: 'Copy and Commit Version'
+      run: ./node_modules/.bin/ci_tools copy-and-commit-version-for-subpackage persistence_api.services/
+
     - name: 'Prepare version'
-      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir
+      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir --force
       working-directory: ./persistence_api.services
 
     - name: 'Publish'
@@ -150,8 +156,11 @@ jobs:
         path: "."
         key: npm-${{ github.sha }}
 
+    - name: 'Copy and Commit Version'
+      run: ./node_modules/.bin/ci_tools copy-and-commit-version-for-subpackage persistence_api.repositories.sequelize/
+
     - name: 'Prepare version'
-      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir
+      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir --force
       working-directory: ./persistence_api.repositories.sequelize
 
     - name: 'Publish'
@@ -179,8 +188,11 @@ jobs:
         path: "."
         key: npm-${{ github.sha }}
 
+    - name: 'Copy and Commit Version'
+      run: ./node_modules/.bin/ci_tools copy-and-commit-version-for-subpackage persistence_api.use_cases/
+
     - name: 'Prepare version'
-      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir
+      run: ./node_modules/.bin/ci_tools prepare-version --allow-dirty-workdir --force
       working-directory: ./persistence_api.use_cases
 
     - name: 'Publish'
